@@ -6,7 +6,8 @@
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "eslint \"{packages/**/*.{js,ts,jsx,tsx},*.{js,ts,jsx,tsx}}\" --fix",
 		"format": "prettier \"{packages/**/*.{js,ts,jsx,tsx,json,css,md},*.{js,ts,jsx,tsx,json,css,md}}\" --write",
-		"prepare": "husky"
+		"prepare": "husky",
+		"dev:backend": "npm run start:dev --workspace packages/backend"
 	},
 	"repository": {
 		"type": "git",
