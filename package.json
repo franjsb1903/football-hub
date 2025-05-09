@@ -1,0 +1,38 @@
+{
+	"name": "football-hub",
+	"version": "1.0.0",
+	"main": "index.js",
+	"scripts": {
+		"test": "echo \"Error: no test specified\" && exit 1",
+		"lint": "eslint \"{packages/**/*.{js,ts,jsx,tsx},*.{js,ts,jsx,tsx}}\" --fix",
+		"format": "prettier \"{packages/**/*.{js,ts,jsx,tsx,json,css,md},*.{js,ts,jsx,tsx,json,css,md}}\" --write"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/franjsb1903/football-hub.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/franjsb1903/football-hub/issues"
+	},
+	"homepage": "https://github.com/franjsb1903/football-hub#readme",
+	"description": "",
+	"workspaces": [
+		"packages/*"
+	],
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^8.32.0",
+		"@typescript-eslint/parser": "^8.32.0",
+		"eslint": "^9.26.0",
+		"eslint-config-prettier": "^10.1.5",
+		"eslint-plugin-import": "^2.31.0",
+		"eslint-plugin-jsx-a11y": "^6.10.2",
+		"eslint-plugin-prettier": "^5.4.0",
+		"eslint-plugin-react": "^7.37.5",
+		"eslint-plugin-react-hooks": "^5.2.0",
+		"eslint-plugin-unicorn": "^59.0.1",
+		"prettier": "^3.5.3"
+	}
+}
