@@ -5,7 +5,8 @@
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"lint": "eslint \"{packages/**/*.{js,ts,jsx,tsx},*.{js,ts,jsx,tsx}}\" --fix",
-		"format": "prettier \"{packages/**/*.{js,ts,jsx,tsx,json,css,md},*.{js,ts,jsx,tsx,json,css,md}}\" --write"
+		"format": "prettier \"{packages/**/*.{js,ts,jsx,tsx,json,css,md},*.{js,ts,jsx,tsx,json,css,md}}\" --write",
+		"prepare": "husky"
 	},
 	"repository": {
 		"type": "git",
@@ -33,6 +34,8 @@
 		"eslint-plugin-react": "^7.37.5",
 		"eslint-plugin-react-hooks": "^5.2.0",
 		"eslint-plugin-unicorn": "^59.0.1",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.5.2",
 		"prettier": "^3.5.3"
 	}
 }
