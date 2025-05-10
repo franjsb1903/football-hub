@@ -64,8 +64,37 @@ export default [
 		},
 		settings: {
 			react: {
-				version: 'detect', // Detecta automáticamente la versión de React
+				version: 'detect',
 			},
+		},
+	},
+	{
+		files: [
+			'**/postcss.config.js',
+			'**/next.config.js',
+			'**/tailwind.config.js',
+		],
+		languageOptions: {
+			parser: tseslint.parser,
+			parserOptions: {
+				project: null,
+				sourceType: 'module',
+				ecmaVersion: 'latest',
+			},
+			globals: {
+				...globals.node,
+			},
+		},
+		plugins: {},
+		rules: {
+			'@typescript-eslint/no-var-requires': 'off',
+			'@typescript-eslint/explicit-module-boundary-types': 'off',
+			'@typescript-eslint/no-unsafe-assignment': 'off',
+			'@typescript-eslint/no-unsafe-member-access': 'off',
+			'@typescript-eslint/no-unsafe-call': 'off',
+			'@typescript-eslint/no-unsafe-return': 'off',
+			'@typescript-eslint/restrict-template-expressions': 'off',
+			'unicorn/prefer-module': 'off',
 		},
 	},
 	pluginPrettier,
