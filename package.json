@@ -7,7 +7,9 @@
 		"lint": "eslint \"{packages/**/*.{js,ts,jsx,tsx},*.{js,ts,jsx,tsx}}\" --fix",
 		"format": "prettier \"{packages/**/*.{js,ts,jsx,tsx,json,css,md},*.{js,ts,jsx,tsx,json,css,md}}\" --write",
 		"prepare": "husky",
-		"dev:backend": "npm run start:dev --workspace packages/backend"
+		"dev:backend": "npm run start:dev --workspace packages/backend",
+		"prisma:migrate": "prisma migrate dev --schema=packages/backend/prisma/schema.prisma",
+		"prisma:generate": "prisma generate --schema=packages/backend/prisma/schema.prisma"
 	},
 	"repository": {
 		"type": "git",
@@ -38,5 +40,8 @@
 		"husky": "^9.1.7",
 		"lint-staged": "^15.5.2",
 		"prettier": "^3.5.3"
+	},
+	"dependencies": {
+		"@prisma/client": "^6.7.0"
 	}
 }
