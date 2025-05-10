@@ -95,6 +95,7 @@ export default [
 			'@typescript-eslint/no-unsafe-return': 'off',
 			'@typescript-eslint/restrict-template-expressions': 'off',
 			'unicorn/prefer-module': 'off',
+			'@typescript-eslint/no-require-imports': 'off',
 		},
 	},
 	pluginPrettier,
