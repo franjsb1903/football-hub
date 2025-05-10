@@ -3,10 +3,12 @@ import {
 	ConflictException,
 	Inject,
 	Injectable,
+	UnauthorizedException,
 } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
-import type { RegisterUser } from 'src/types'
+import type { LoginUser, RegisterUser } from 'src/types'
 import { JwtService } from '@nestjs/jwt'
+import { User } from '@prisma/client'
 
 import { PrismaProvider } from '../prisma'
 
@@ -29,21 +31,45 @@ export default class AuthProvider {
 			},
 		})
 
-		const payload = {
-			id: newUser.id,
-			email: newUser.email,
-			name: newUser.name,
+		return this.getUserPayloadAndToken(newUser)
+	}
+
+	async login(user: LoginUser) {
+		if (!user || !user.email || !user.password) {
+			throw new BadRequestException('Faltan campos requeridos')
 		}
 
-		return {
-			user: payload,
-			accessToken: this.jwt.sign(payload),
+		const savedUser = await this.prisma.user.findUnique({
+			where: { email: user.email },
+		})
+
+		if (!savedUser) {
+			throw new UnauthorizedException('Usuario no encontrado')
 		}
+
+		const isPasswordValid = await bcrypt.compare(
+			user.password,
+			savedUser.password || '',
+		)
+
+		if (!isPasswordValid) {
+			throw new UnauthorizedException('Contraseña incorrecta')
+		}
+
+		return this.getUserPayloadAndToken(savedUser)
 	}
 
 	private async validateUserRegistration(user: RegisterUser) {
 		if (!user || !user.email || !user.name || !user.password) {
 			throw new BadRequestException('Faltan campos requeridos')
+		}
+
+		if (
+			!new RegExp(
+				/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+			).test(user.email)
+		) {
+			throw new BadRequestException('Email no válido')
 		}
 
 		const existingUser = await this.prisma.user.findUnique({
@@ -57,5 +83,18 @@ export default class AuthProvider {
 
 	private async hashPassword(password: string) {
 		return bcrypt.hash(password, 10)
+	}
+
+	private getUserPayloadAndToken(user: User) {
+		const payload = {
+			id: user.id,
+			email: user.email,
+			name: user.name,
+		}
+
+		return {
+			user: payload,
+			accessToken: this.jwt.sign(payload),
+		}
 	}
 }
