@@ -1,0 +1,15 @@
+.container {
+	@apply flex h-screen w-full items-center justify-center;
+}
+
+.loader {
+	@apply flex flex-col items-center space-y-4;
+}
+
+.spinner {
+	@apply h-8 w-8 animate-spin text-gray-500 dark:text-gray-400;
+}
+
+.text {
+	@apply text-gray-500 dark:text-gray-400;
+}
