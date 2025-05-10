@@ -1,3 +1,4 @@
+import { Button } from '@/components/ui/button'
 import styles from './styles.module.css'
 
 export default function Login() {
@@ -5,7 +6,7 @@ export default function Login() {
 		<section>
 			<h1 className={styles.some}>Login</h1>
 			<p>Login page</p>
-			<button>Login</button>
+			<Button>Login</Button>
 		</section>
 	)
 }

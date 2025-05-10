@@ -14,7 +14,7 @@ export default [
 	},
 	{
 		files: ['packages/**/*.{js,ts,jsx,tsx}', '*.{js,ts,jsx,tsx}'],
-		ignores: ['eslint.config.js'],
+		ignores: ['eslint.config.js', '**/utils.ts'],
 		languageOptions: {
 			parser: tseslint.parser,
 			parserOptions: {
