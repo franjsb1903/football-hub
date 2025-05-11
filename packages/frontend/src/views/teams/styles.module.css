@@ -12,6 +12,10 @@
 	@apply text-xl md:text-2xl font-bold;
 }
 
+.cardTitle {
+	@apply flex justify-between;
+}
+
 .subtitle {
 	@apply text-sm md:text-base text-gray-400;
 }
@@ -24,7 +28,7 @@
 }
 
 .list {
-	@apply h-[200px] md:h-full overflow-y-auto;
+	@apply h-[200px] md:h-[400px] overflow-y-auto;
 	@apply flex flex-col gap-4;
 }
 

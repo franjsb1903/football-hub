@@ -2,22 +2,26 @@ import { useDebounce } from '@uidotdev/usehooks'
 import React, { useEffect, useState } from 'react'
 
 import request from '@/services/request'
+import { Team } from '@/types'
 
 export default function useSearch(token?: string) {
 	const [searchTerm, setSearchTerm] = useState('')
-	const debouncedSearchTerm = useDebounce(searchTerm, 1000)
+	const [teams, setTeams] = useState<Team[]>()
+	const debouncedSearchTerm = useDebounce(searchTerm, 500)
 
 	useEffect(() => {
 		if (debouncedSearchTerm) {
 			request
-				.get('request/teams', {
+				.get<Team[]>('request/teams', {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
 				})
-				.then((reponse) => {
-					console.log({ reponse })
+				.then((response) => {
+					setTeams(response)
 				})
+		} else {
+			setTeams([])
 		}
 	}, [debouncedSearchTerm, token])
 
@@ -28,6 +32,7 @@ export default function useSearch(token?: string) {
 
 	return {
 		searchTerm,
+		teams,
 		handleSearchChange,
 	}
 }

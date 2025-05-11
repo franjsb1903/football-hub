@@ -8,6 +8,7 @@
 		"format": "prettier \"{packages/**/*.{js,ts,jsx,tsx,json,css,md},*.{js,ts,jsx,tsx,json,css,md}}\" --write",
 		"prepare": "husky",
 		"dev:backend": "npm run start:dev --workspace packages/backend",
+		"dev:frontend": "npm run dev --workspace packages/frontend",
 		"prisma:migrate": "prisma migrate dev --schema=packages/backend/prisma/schema.prisma",
 		"prisma:generate": "prisma generate --schema=packages/backend/prisma/schema.prisma"
 	},

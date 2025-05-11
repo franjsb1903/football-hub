@@ -7,8 +7,9 @@ export async function GET(
 	{ params }: { params: { path: string | string[] } },
 ) {
 	const token = request.headers.get('Authorization')?.split(' ')[1]
+	const { path } = await params
 
-	const path = Array.isArray(params.path) ? params.path[0] : params.path
+	const urlPath = Array.isArray(path) ? path[0] : path
 	const searchParameters = request.nextUrl.searchParams
 
 	const parameters = searchParameters.entries()
@@ -22,8 +23,8 @@ export async function GET(
 
 	const finalPath =
 		requestParameters.length > 0
-			? `${path}?${requestParameters.join('&')}`
-			: path
+			? `${urlPath}?${requestParameters.join('&')}`
+			: urlPath
 
 	const response = await api.get(finalPath, {
 		headers: {

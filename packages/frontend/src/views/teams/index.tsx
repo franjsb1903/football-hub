@@ -5,13 +5,16 @@ import { redirect } from 'next/navigation'
 
 import styles from './styles.module.css'
 import SearchInput from '@/components/search-input'
-import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import useSearch from './hooks/use-search'
+import useFavoriteTeams from './hooks/use-favorite-teams'
+import TeamList from './list'
 
 export default function Teams() {
 	const { data, status } = useSession()
-	const { searchTerm, handleSearchChange } = useSearch(data?.accessToken)
-
+	const { searchTerm, teams, handleSearchChange } = useSearch(
+		data?.accessToken,
+	)
+	const { favoriteTeams, isFavorite, toggleFavorite } = useFavoriteTeams()
 	if (status === 'unauthenticated') {
 		return redirect('/login')
 	}
@@ -29,20 +32,11 @@ export default function Teams() {
 						value={searchTerm}
 						onChange={handleSearchChange}
 					/>
-					<section className={styles.list}>
-						{[
-							'Real Madrid',
-							'Bilbao',
-							'Barcelona',
-							'Atlético de Madrid',
-						].map((team) => (
-							<Card key={team}>
-								<CardHeader>
-									<CardTitle>{team}</CardTitle>
-								</CardHeader>
-							</Card>
-						))}
-					</section>
+					<TeamList
+						teams={teams}
+						isFavorite={isFavorite}
+						toggleFavorite={toggleFavorite}
+					/>
 				</section>
 			</section>
 			<section className={styles.section}>
@@ -52,20 +46,11 @@ export default function Teams() {
 					favoritos
 				</p>
 				<section className={styles.myTeamsContainer}>
-					<section className={styles.list}>
-						{[
-							'Real Madrid',
-							'Bilbao',
-							'Barcelona',
-							'Atlético de Madrid',
-						].map((team) => (
-							<Card key={team}>
-								<CardHeader>
-									<CardTitle>{team}</CardTitle>
-								</CardHeader>
-							</Card>
-						))}
-					</section>
+					<TeamList
+						teams={favoriteTeams}
+						isFavorite={isFavorite}
+						toggleFavorite={toggleFavorite}
+					/>
 				</section>
 			</section>
 		</div>
