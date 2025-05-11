@@ -51,6 +51,30 @@ export async function POST(
 	return NextResponse.json(response)
 }
 
+export async function DELETE(
+	request: NextRequest,
+	{ params }: { params: { path: string | string[] } },
+) {
+	const token = request.headers.get('Authorization')?.split(' ')[1]
+	const { path } = await params
+
+	const urlPath = Array.isArray(path) ? path.join('/') : path
+	const searchParameters = request.nextUrl.searchParams
+
+	const parameters = searchParameters.entries()
+	const requestParameters = buildParameters(parameters)
+
+	const finalPath = buildFinalPath(requestParameters, urlPath)
+
+	const response = await api.delete(finalPath, {
+		headers: {
+			Authorization: `Bearer ${token}`,
+		},
+	})
+
+	return NextResponse.json(response)
+}
+
 function buildParameters(
 	parameters: URLSearchParamsIterator<[string, string]>,
 ) {
