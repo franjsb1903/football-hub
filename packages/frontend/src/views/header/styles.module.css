@@ -1,6 +1,6 @@
 .header {
 	@apply fixed top-0 w-full;
-	@apply flex items-center justify-between bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2;
+	@apply flex items-center justify-between bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-8 py-2;
 
 	& h3 {
 		@apply text-sm md:text-xl font-bold text-gray-600;
@@ -8,7 +8,15 @@
 }
 
 .links {
-	@apply flex gap-4 items-center text-sm md:text-lg;
+	@apply flex gap-4 md:gap-8 items-center text-sm md:text-lg;
+
+	& a {
+		@apply font-semibold text-gray-400;
+	}
+
+	& a:hover {
+		@apply text-gray-600;
+	}
 }
 
 .button {

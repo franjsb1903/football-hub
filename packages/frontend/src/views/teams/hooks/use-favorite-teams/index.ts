@@ -1,11 +1,12 @@
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo } from 'react'
 
 import { Team } from '@/types'
 import request from '@/services/request'
+import { useFetchFavoriteTeams } from '@/hooks'
 
 export default function useFavoriteTeams(token?: string) {
-	const [favoriteTeams, setFavoriteTeams] = useState<Team[]>([])
-	const [isLoading, setIsLoading] = useState(false)
+	const { favoriteTeams, isLoading, setFavoriteTeams } =
+		useFetchFavoriteTeams(token)
 
 	const ids = useMemo(() => {
 		return favoriteTeams.map(({ id }) => id)
@@ -14,25 +15,6 @@ export default function useFavoriteTeams(token?: string) {
 	const isMaximumReached = useMemo(() => {
 		return favoriteTeams.length >= 5
 	}, [favoriteTeams])
-
-	useEffect(() => {
-		if (token) {
-			setIsLoading(true)
-			request
-				.get<Team[]>('request/favorite', {
-					headers: {
-						Authorization: `Bearer ${token}`,
-					},
-				})
-				.then((response) => {
-					setFavoriteTeams(response || [])
-					setIsLoading(false)
-				})
-				.catch(() => {
-					alert('No se han podido obtener tus equipos favoritos')
-				})
-		}
-	}, [token])
 
 	const isFavorite = (teamId: number) => {
 		return ids.includes(teamId)

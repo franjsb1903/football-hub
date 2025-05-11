@@ -5,9 +5,8 @@ import { redirect } from 'next/navigation'
 
 import styles from './styles.module.css'
 import SearchInput from '@/components/search-input'
-import useSearch from './hooks/use-search'
-import useFavoriteTeams from './hooks/use-favorite-teams'
 import TeamList from './list'
+import { useFavoriteTeams, useSearch } from './hooks'
 
 export default function Teams() {
 	const { data, status } = useSession()
@@ -48,6 +47,8 @@ export default function Teams() {
 							teams={teams}
 							isFavorite={isFavorite}
 							toggleFavorite={toggleFavorite}
+							showStar
+							heightClass="h-[200px] md:h-[400px]"
 						/>
 					)}
 				</section>
@@ -65,6 +66,7 @@ export default function Teams() {
 							teams={favoriteTeams}
 							isFavorite={isFavorite}
 							toggleFavorite={toggleFavorite}
+							showStar
 						/>
 					) : isLoading ? undefined : (
 						<p className={styles.empty}>

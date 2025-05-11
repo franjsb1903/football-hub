@@ -13,17 +13,21 @@ import {
 
 interface TeamListProperties {
 	teams?: Team[]
-	isFavorite: (teamId: number) => boolean
-	toggleFavorite: (team: Team) => void
+	showStar?: boolean
+	heightClass?: string
+	isFavorite?: (teamId: number) => boolean
+	toggleFavorite?: (team: Team) => void
 }
 
 export default function TeamList({
 	teams,
+	showStar,
+	heightClass,
 	isFavorite,
 	toggleFavorite,
 }: TeamListProperties) {
 	return (
-		<section className={styles.list}>
+		<section className={`${styles.list} ${heightClass}`}>
 			{teams?.map((team) => (
 				<Card key={team.id}>
 					<CardHeader className={styles.cardHeader}>
@@ -36,15 +40,23 @@ export default function TeamList({
 						<article className="flex flex-col w-full">
 							<CardTitle className={styles.cardTitle}>
 								{team.name}{' '}
-								{isFavorite(team.id) ? (
+								{showStar &&
+								isFavorite &&
+								isFavorite(team.id) ? (
 									<FilledStar
-										onClick={() => toggleFavorite(team)}
+										onClick={() =>
+											toggleFavorite &&
+											toggleFavorite(team)
+										}
 									/>
-								) : (
+								) : showStar && isFavorite ? (
 									<Star
-										onClick={() => toggleFavorite(team)}
+										onClick={() =>
+											toggleFavorite &&
+											toggleFavorite(team)
+										}
 									/>
-								)}
+								) : undefined}
 							</CardTitle>
 							<CardDescription>
 								País: {team.country ?? '-'}

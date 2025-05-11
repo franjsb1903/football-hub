@@ -36,7 +36,7 @@
 }
 
 .list {
-	@apply h-[200px] md:h-[400px] overflow-y-auto;
+	@apply overflow-y-auto;
 	@apply flex flex-col gap-4;
 }
 
