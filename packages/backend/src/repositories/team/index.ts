@@ -35,4 +35,19 @@ export default class FavoriteTeamRepository {
 			},
 		})
 	}
+
+	async deleteFavoriteTeam(userId: string, teamId: number) {
+		if (typeof teamId !== 'number') {
+			throw new BadRequestException('El equipo no es correcto')
+		}
+
+		return this.prisma.favoriteTeam.delete({
+			where: {
+				userId_teamId: {
+					userId,
+					teamId,
+				},
+			},
+		})
+	}
 }

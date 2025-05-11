@@ -1,10 +1,12 @@
 import {
 	Body,
 	Controller,
+	Delete,
 	Get,
 	Inject,
 	InternalServerErrorException,
 	Logger,
+	Param,
 	Post,
 	Query,
 	Request,
@@ -47,6 +49,21 @@ export class TeamsController {
 			return this.favoriteTeamRepository.saveFavoriteTeam(userId, team)
 		} catch (error) {
 			this.logger.error('Error saving favorite team', error)
+		}
+	}
+
+	@Delete('/favorite/:id')
+	async deleteFavoriteTeam(@Param('id') teamId: string, @Request() request) {
+		try {
+			const user = request.user
+			const userId = user.id
+
+			return this.favoriteTeamRepository.deleteFavoriteTeam(
+				userId,
+				Number.parseInt(teamId),
+			)
+		} catch (error) {
+			this.logger.error('Error deleting favorite team', error)
 		}
 	}
 }
