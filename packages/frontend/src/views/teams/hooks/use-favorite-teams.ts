@@ -10,6 +10,10 @@ export default function useFavoriteTeams(token?: string) {
 		return favoriteTeams.map(({ id }) => id)
 	}, [favoriteTeams])
 
+	const isMaximumReached = useMemo(() => {
+		return favoriteTeams.length >= 5
+	}, [favoriteTeams])
+
 	useEffect(() => {
 		if (token)
 			request
@@ -66,5 +70,5 @@ export default function useFavoriteTeams(token?: string) {
 		return addAsFavorite(team)
 	}
 
-	return { favoriteTeams, isFavorite, toggleFavorite }
+	return { favoriteTeams, isMaximumReached, isFavorite, toggleFavorite }
 }

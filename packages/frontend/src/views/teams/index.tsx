@@ -14,9 +14,8 @@ export default function Teams() {
 	const { searchTerm, teams, handleSearchChange } = useSearch(
 		data?.accessToken,
 	)
-	const { favoriteTeams, isFavorite, toggleFavorite } = useFavoriteTeams(
-		data?.accessToken,
-	)
+	const { favoriteTeams, isMaximumReached, isFavorite, toggleFavorite } =
+		useFavoriteTeams(data?.accessToken)
 	if (status === 'unauthenticated') {
 		return redirect('/login')
 	}
@@ -32,13 +31,20 @@ export default function Teams() {
 					<SearchInput
 						placeholder="Buscar equipos..."
 						value={searchTerm}
+						disabled={isMaximumReached}
 						onChange={handleSearchChange}
 					/>
-					<TeamList
-						teams={teams}
-						isFavorite={isFavorite}
-						toggleFavorite={toggleFavorite}
-					/>
+					{isMaximumReached ? (
+						<p>
+							¡Genial! Ya tienes todos tus equipos seleccionados
+						</p>
+					) : (
+						<TeamList
+							teams={teams}
+							isFavorite={isFavorite}
+							toggleFavorite={toggleFavorite}
+						/>
+					)}
 				</section>
 			</section>
 			<section className={styles.section}>
@@ -48,11 +54,18 @@ export default function Teams() {
 					favoritos
 				</p>
 				<section className={styles.myTeamsContainer}>
-					<TeamList
-						teams={favoriteTeams}
-						isFavorite={isFavorite}
-						toggleFavorite={toggleFavorite}
-					/>
+					{favoriteTeams.length > 0 ? (
+						<TeamList
+							teams={favoriteTeams}
+							isFavorite={isFavorite}
+							toggleFavorite={toggleFavorite}
+						/>
+					) : (
+						<p className={styles.empty}>
+							Todavía no tienes equipos. Emplea el buscador de tu
+							izquierda para comenzar
+						</p>
+					)}
 				</section>
 			</section>
 		</div>

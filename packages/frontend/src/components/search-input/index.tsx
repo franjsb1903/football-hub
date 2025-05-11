@@ -7,6 +7,7 @@ import styles from './styles.module.css'
 interface SearchInputProperties {
 	placeholder?: string
 	value: string
+	disabled: boolean
 	// eslint-disable-next-line no-unused-vars
 	onChange: (event: React.ChangeEvent<HTMLInputElement>) => void
 }
@@ -14,6 +15,7 @@ interface SearchInputProperties {
 export default function SearchInput({
 	placeholder,
 	value,
+	disabled,
 	onChange,
 }: SearchInputProperties) {
 	return (
@@ -24,6 +26,7 @@ export default function SearchInput({
 				placeholder={placeholder || 'Buscar...'}
 				className={styles.input}
 				value={value}
+				disabled={disabled}
 				onChange={onChange}
 			/>
 		</div>

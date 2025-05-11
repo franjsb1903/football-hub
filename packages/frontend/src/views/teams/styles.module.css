@@ -20,6 +20,10 @@
 	@apply text-sm md:text-base text-gray-400;
 }
 
+.empty {
+	@apply text-sm md:text-lg text-orange-400;
+}
+
 .searchContainer {
 	@apply mt-5;
 	@apply flex flex-col gap-4;
