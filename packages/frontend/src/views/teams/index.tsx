@@ -9,8 +9,8 @@ import { Card, CardHeader, CardTitle } from '@/components/ui/card'
 import useSearch from './hooks/use-search'
 
 export default function Teams() {
-	const { status } = useSession()
-	const { searchTerm, handleSearchChange } = useSearch()
+	const { data, status } = useSession()
+	const { searchTerm, handleSearchChange } = useSearch(data?.accessToken)
 
 	if (status === 'unauthenticated') {
 		return redirect('/login')
