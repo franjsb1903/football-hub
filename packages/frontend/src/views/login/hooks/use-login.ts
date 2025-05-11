@@ -9,22 +9,18 @@ export function useLogin() {
 	const handleCredentialsSignIn: FormEventHandler<HTMLFormElement> = async (
 		event,
 	) => {
-		try {
-			event.preventDefault()
+		event.preventDefault()
 
-			const response = await signIn('credentials', {
-				email,
-				password,
-				redirect: false,
-			})
+		const response = await signIn('credentials', {
+			email,
+			password,
+			redirect: false,
+		})
 
-			if (response && response.ok) {
-				redirect('/teams')
-			} else {
-				alert('No se ha podido iniciar sesión')
-			}
-		} catch {
-			alert('Error al iniciar sesión')
+		if (response && response.ok) {
+			redirect('/teams')
+		} else {
+			alert('No se ha podido iniciar sesión')
 		}
 	}
 

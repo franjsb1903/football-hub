@@ -1,0 +1,32 @@
+.container {
+	@apply p-10;
+	@apply flex flex-col md:flex-row gap-4 md:gap-10;
+}
+
+.section {
+	@apply w-full md:w-[50%];
+	@apply flex flex-col gap-2;
+}
+
+.title {
+	@apply text-xl md:text-2xl font-bold;
+}
+
+.subtitle {
+	@apply text-sm md:text-base text-gray-400;
+}
+
+.searchContainer {
+	@apply mt-5;
+	@apply flex flex-col gap-4;
+	@apply md:border-b-0 border-b border-gray-300;
+	@apply pb-10;
+}
+
+.list {
+	@apply h-[200px] md:h-full overflow-y-auto;
+	@apply flex flex-col gap-4;
+}
+
+.myTeamsContainer {
+}
