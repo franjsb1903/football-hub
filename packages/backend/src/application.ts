@@ -10,6 +10,7 @@ import { AuthController } from './controllers/auth'
 import { AuthProvider, PrismaProvider } from './providers'
 import { TeamsController } from './controllers/teams'
 import FootballFetcherProvider from './providers/football-fetcher'
+import FavoriteTeamRepository from './repositories/team'
 
 @Module({
 	imports: [
@@ -27,6 +28,12 @@ import FootballFetcherProvider from './providers/football-fetcher'
 		}),
 	],
 	controllers: [AuthController, TeamsController],
-	providers: [PrismaProvider, AuthProvider, FootballFetcherProvider, Logger],
+	providers: [
+		PrismaProvider,
+		AuthProvider,
+		FootballFetcherProvider,
+		FavoriteTeamRepository,
+		Logger,
+	],
 })
 export class AppModule {}
