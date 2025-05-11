@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
 	return (
 		<html lang="en">
-			<body style={{ margin: 0, padding: 0, minHeight: '100vh' }}>
+			<body style={{ margin: 0, paddingTop: '50px', minHeight: '100vh' }}>
 				<Suspense fallback={<Loading />}>
 					<MainLayout>
 						<Suspense fallback={<Loading />}>{children}</Suspense>
