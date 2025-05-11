@@ -5,6 +5,7 @@ import request from '@/services/request'
 
 export default function useFavoriteTeams(token?: string) {
 	const [favoriteTeams, setFavoriteTeams] = useState<Team[]>([])
+	const [isLoading, setIsLoading] = useState(false)
 
 	const ids = useMemo(() => {
 		return favoriteTeams.map(({ id }) => id)
@@ -15,52 +16,59 @@ export default function useFavoriteTeams(token?: string) {
 	}, [favoriteTeams])
 
 	useEffect(() => {
-		if (token)
+		if (token) {
+			setIsLoading(true)
 			request
 				.get<Team[]>('request/favorite', {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
 				})
-				.then((response) => setFavoriteTeams(response || []))
+				.then((response) => {
+					setFavoriteTeams(response || [])
+					setIsLoading(false)
+				})
 				.catch(() => {
 					alert('No se han podido obtener tus equipos favoritos')
 				})
+		}
 	}, [token])
 
 	const isFavorite = (teamId: number) => {
 		return ids.includes(teamId)
 	}
 
-	const addAsFavorite = (team: Team) => {
+	const addAsFavorite = async (team: Team) => {
 		if (favoriteTeams.length >= 5) {
 			alert('Ya has seleccionado todos los equipos')
 			return
 		}
 
-		setFavoriteTeams((previousState) => [...previousState, team])
-		request
-			.post('request/favorite', team, {
+		try {
+			await request.post('request/favorite', team, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			// TODO: Eliminar y emitir alerta
-			.catch(() => {})
+			setFavoriteTeams((previousState) => [...previousState, team])
+		} catch {
+			alert('Ha ocurrido un problema al guardar tu equipo como favorito')
+		}
 	}
 
-	const deleteAsFavorite = (teamId: number) => {
-		setFavoriteTeams((previousState) =>
-			previousState.filter(({ id }) => id !== teamId),
-		)
-		request
-			.delete(`request/favorite/${teamId}`, {
+	const deleteAsFavorite = async (teamId: number) => {
+		try {
+			await request.delete(`request/favorite/${teamId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			// TODO: Volver a añadir y emitir alerta
-			.catch(() => {})
+			setFavoriteTeams((previousState) =>
+				previousState.filter(({ id }) => id !== teamId),
+			)
+		} catch {
+			alert('Ha ocurrido un problema al quitar tu equipo como favorito')
+		}
 	}
 
 	const toggleFavorite = (team: Team) => {
@@ -70,5 +78,11 @@ export default function useFavoriteTeams(token?: string) {
 		return addAsFavorite(team)
 	}
 
-	return { favoriteTeams, isMaximumReached, isFavorite, toggleFavorite }
+	return {
+		favoriteTeams,
+		isMaximumReached,
+		isLoading,
+		isFavorite,
+		toggleFavorite,
+	}
 }

@@ -14,8 +14,13 @@ export default function Teams() {
 	const { searchTerm, teams, handleSearchChange } = useSearch(
 		data?.accessToken,
 	)
-	const { favoriteTeams, isMaximumReached, isFavorite, toggleFavorite } =
-		useFavoriteTeams(data?.accessToken)
+	const {
+		favoriteTeams,
+		isMaximumReached,
+		isLoading,
+		isFavorite,
+		toggleFavorite,
+	} = useFavoriteTeams(data?.accessToken)
 	if (status === 'unauthenticated') {
 		return redirect('/login')
 	}
@@ -54,13 +59,14 @@ export default function Teams() {
 					favoritos
 				</p>
 				<section className={styles.myTeamsContainer}>
-					{favoriteTeams.length > 0 ? (
+					{isLoading && <p>Cargando...</p>}
+					{favoriteTeams.length > 0 && !isLoading ? (
 						<TeamList
 							teams={favoriteTeams}
 							isFavorite={isFavorite}
 							toggleFavorite={toggleFavorite}
 						/>
-					) : (
+					) : isLoading ? undefined : (
 						<p className={styles.empty}>
 							Todavía no tienes equipos. Emplea el buscador de tu
 							izquierda para comenzar
