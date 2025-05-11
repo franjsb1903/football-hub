@@ -9,14 +9,12 @@ declare module 'next-auth' {
 	interface User extends DefaultUser {
 		accessToken?: string
 		id?: string
-		favouriteTeams?: string[]
 	}
 
 	interface Session extends DefaultSession {
 		accessToken?: string
 		user?: {
 			id?: string
-			favouriteTeams?: string[]
 		} & DefaultSession['user']
 	}
 }
@@ -25,7 +23,6 @@ declare module 'next-auth/jwt' {
 	interface JWT {
 		accessToken?: string
 		id?: string
-		favouriteTeams?: string[]
 	}
 }
 
@@ -59,7 +56,6 @@ export const authOptions: NextAuthOptions = {
 						id: response.user.id,
 						email: response.user.email,
 						name: response.user.name,
-						favouriteTeams: response.user.favoriteTeams,
 						accessToken: response.accessToken,
 					}
 				} catch (error) {
@@ -83,14 +79,12 @@ export const authOptions: NextAuthOptions = {
 			if (user) {
 				token.id = user.id
 				token.accessToken = user.accessToken
-				token.favouriteTeams = user.favouriteTeams
 			}
 			return token
 		},
 		async session({ session, token }) {
 			if (session.user) {
 				session.user.id = token.id
-				session.user.favouriteTeams = token.favouriteTeams
 			}
 			session.accessToken = token.accessToken
 			return session

@@ -41,9 +41,6 @@ export default class AuthProvider {
 
 		const savedUser = await this.prisma.user.findUnique({
 			where: { email: user.email },
-			include: {
-				favoriteTeams: true,
-			},
 		})
 
 		if (!savedUser) {
@@ -64,7 +61,6 @@ export default class AuthProvider {
 		return {
 			user: {
 				...authUser.user,
-				favoriteTeams: savedUser.favoriteTeams,
 			},
 			accessToken: authUser.accessToken,
 		}
