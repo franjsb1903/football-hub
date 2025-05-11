@@ -5,7 +5,7 @@ import {
 	Inject,
 	InternalServerErrorException,
 	Logger,
-	Put,
+	Post,
 	Query,
 	Request,
 	UseGuards,
@@ -38,7 +38,7 @@ export class TeamsController {
 		}
 	}
 
-	@Put('/favorite')
+	@Post('/favorite')
 	async saveFavoriteTeam(@Body() team: Team, @Request() request) {
 		try {
 			const user = request.user

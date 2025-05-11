@@ -14,7 +14,9 @@ export default function Teams() {
 	const { searchTerm, teams, handleSearchChange } = useSearch(
 		data?.accessToken,
 	)
-	const { favoriteTeams, isFavorite, toggleFavorite } = useFavoriteTeams()
+	const { favoriteTeams, isFavorite, toggleFavorite } = useFavoriteTeams(
+		data?.accessToken,
+	)
 	if (status === 'unauthenticated') {
 		return redirect('/login')
 	}

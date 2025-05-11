@@ -1,8 +1,9 @@
 import { useMemo, useState } from 'react'
 
 import { Team } from '@/types'
+import request from '@/services/request'
 
-export default function useFavoriteTeams() {
+export default function useFavoriteTeams(token?: string) {
 	const [favoriteTeams, setFavoriteTeams] = useState<Team[]>([])
 
 	const ids = useMemo(() => {
@@ -18,7 +19,11 @@ export default function useFavoriteTeams() {
 			alert('Ya has seleccionado todos los equipos')
 			return
 		}
-
+		request.post('request/teams/favorite', team, {
+			headers: {
+				Authorization: `Bearer ${token}`,
+			},
+		})
 		setFavoriteTeams((previousState) => [...previousState, team])
 	}
 
