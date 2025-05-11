@@ -12,8 +12,12 @@
 	@apply text-xl md:text-2xl font-bold;
 }
 
+.cardHeader {
+	@apply flex flex-row gap-2;
+}
+
 .cardTitle {
-	@apply flex justify-between;
+	@apply flex flex-row justify-between;
 }
 
 .subtitle {

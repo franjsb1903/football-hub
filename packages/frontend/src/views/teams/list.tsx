@@ -26,20 +26,30 @@ export default function TeamList({
 		<section className={styles.list}>
 			{teams?.map((team) => (
 				<Card key={team.id}>
-					<CardHeader>
-						<CardTitle className={styles.cardTitle}>
-							{team.name}{' '}
-							{isFavorite(team.id) ? (
-								<FilledStar
-									onClick={() => toggleFavorite(team)}
-								/>
-							) : (
-								<Star onClick={() => toggleFavorite(team)} />
-							)}
-						</CardTitle>
-						<CardDescription>
-							País: {team.country ?? '-'}
-						</CardDescription>
+					<CardHeader className={styles.cardHeader}>
+						<img
+							src={team.logo || ''}
+							alt={`Logo de ${team.name}`}
+							width={50}
+							height={25}
+						/>
+						<article className="flex flex-col w-full">
+							<CardTitle className={styles.cardTitle}>
+								{team.name}{' '}
+								{isFavorite(team.id) ? (
+									<FilledStar
+										onClick={() => toggleFavorite(team)}
+									/>
+								) : (
+									<Star
+										onClick={() => toggleFavorite(team)}
+									/>
+								)}
+							</CardTitle>
+							<CardDescription>
+								País: {team.country ?? '-'}
+							</CardDescription>
+						</article>
 					</CardHeader>
 				</Card>
 			))}
