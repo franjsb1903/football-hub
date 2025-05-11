@@ -1,4 +1,7 @@
+'use client'
 import type React from 'react'
+import { FormEventHandler, useState } from 'react'
+import { signIn } from 'next-auth/react'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -17,6 +20,22 @@ export default function LoginForm({
 	className,
 	...properties
 }: React.ComponentPropsWithoutRef<'div'>) {
+	const [email, setEmail] = useState('')
+	const [password, setPassword] = useState('')
+
+	const handleCredentialsSignIn: FormEventHandler<HTMLFormElement> = async (
+		event,
+	) => {
+		event.preventDefault()
+		console.log({ email, password })
+		const response = await signIn('credentials', {
+			email,
+			password,
+			redirect: false,
+		})
+		console.log({ response })
+	}
+
 	return (
 		<div className={cn(styles.container, className)} {...properties}>
 			<Card>
@@ -27,7 +46,7 @@ export default function LoginForm({
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
-					<form>
+					<form onSubmit={handleCredentialsSignIn}>
 						<div className={styles.form}>
 							<div className={styles.field}>
 								<Label htmlFor="email">Email</Label>
@@ -35,13 +54,25 @@ export default function LoginForm({
 									id="email"
 									type="email"
 									placeholder="m@example.com"
+									onChange={(event) =>
+										setEmail(event.target.value)
+									}
+									value={email}
 									required
 								/>
 							</div>
 							<div className={styles.field}>
 								<Label htmlFor="password">Password</Label>
 
-								<Input id="password" type="password" required />
+								<Input
+									id="password"
+									type="password"
+									required
+									value={password}
+									onChange={(event) =>
+										setPassword(event.target.value)
+									}
+								/>
 							</div>
 							<Button type="submit" className={styles.button}>
 								Login
