@@ -3,6 +3,14 @@
 	@apply flex items-center justify-between bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 px-4 py-2;
 
 	& h3 {
-		@apply text-xl font-bold text-gray-600;
+		@apply text-sm md:text-xl font-bold text-gray-600;
 	}
+}
+
+.links {
+	@apply flex gap-4 items-center text-sm md:text-lg;
+}
+
+.button {
+	@apply hover:cursor-pointer;
 }
