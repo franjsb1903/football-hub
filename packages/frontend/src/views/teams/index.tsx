@@ -6,9 +6,11 @@ import { redirect } from 'next/navigation'
 import styles from './styles.module.css'
 import SearchInput from '@/components/search-input'
 import { Card, CardHeader, CardTitle } from '@/components/ui/card'
+import useSearch from './hooks/use-search'
 
 export default function Teams() {
 	const { status } = useSession()
+	const { searchTerm, handleSearchChange } = useSearch()
 
 	if (status === 'unauthenticated') {
 		return redirect('/login')
@@ -22,7 +24,11 @@ export default function Teams() {
 					Selecciona hasta un máximo de 5 equipos favoritos
 				</p>
 				<section className={styles.searchContainer}>
-					<SearchInput placeholder="Buscar equipos..." />
+					<SearchInput
+						placeholder="Buscar equipos..."
+						value={searchTerm}
+						onChange={handleSearchChange}
+					/>
 					<section className={styles.list}>
 						{[
 							'Real Madrid',
