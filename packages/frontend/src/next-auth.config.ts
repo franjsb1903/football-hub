@@ -9,12 +9,14 @@ declare module 'next-auth' {
 	interface User extends DefaultUser {
 		accessToken?: string
 		id?: string
+		favouriteTeams?: string[]
 	}
 
 	interface Session extends DefaultSession {
 		accessToken?: string
 		user?: {
 			id?: string
+			favouriteTeams?: string[]
 		} & DefaultSession['user']
 	}
 }
@@ -23,6 +25,7 @@ declare module 'next-auth/jwt' {
 	interface JWT {
 		accessToken?: string
 		id?: string
+		favouriteTeams?: string[]
 	}
 }
 
@@ -40,19 +43,33 @@ export const authOptions: NextAuthOptions = {
 				password: { label: 'Contraseña', type: 'password' },
 			},
 			async authorize(credentials) {
-				const response = (await api.post('auth/login', {
-					email: credentials?.email,
-					password: credentials?.password,
-				})) as any
+				try {
+					const response = (await api.post('auth/login', {
+						email: credentials?.email,
+						password: credentials?.password,
+					})) as any
 
-				if (!response?.accessToken)
-					throw new Error('Credenciales incorrectas')
+					if (!response?.accessToken)
+						throw new Error('Credenciales incorrectas')
 
-				return {
-					id: response.user.id,
-					email: response.user.email,
-					name: response.user.name,
-					accessToken: response.accessToken,
+					// eslint-disable-next-line unicorn/no-null
+					if (!response?.user) return null
+
+					return {
+						id: response.user.id,
+						email: response.user.email,
+						name: response.user.name,
+						favouriteTeams: response.user.favoriteTeams,
+						accessToken: response.accessToken,
+					}
+				} catch (error) {
+					console.error('Error in authorize:', error)
+					if (error instanceof Error) {
+						throw new TypeError(
+							error.message || 'Error in authorize',
+						)
+					}
+					throw new Error('Error in authorize')
 				}
 			},
 		}),
@@ -65,12 +82,14 @@ export const authOptions: NextAuthOptions = {
 			if (user) {
 				token.id = user.id
 				token.accessToken = user.accessToken
+				token.favouriteTeams = user.favouriteTeams
 			}
 			return token
 		},
 		async session({ session, token }) {
 			if (session.user) {
 				session.user.id = token.id
+				session.user.favouriteTeams = token.favouriteTeams
 			}
 			session.accessToken = token.accessToken
 			return session

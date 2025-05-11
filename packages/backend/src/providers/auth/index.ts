@@ -31,7 +31,7 @@ export default class AuthProvider {
 			},
 		})
 
-		return this.getUserPayloadAndToken(newUser)
+		return newUser
 	}
 
 	async login(user: LoginUser) {
@@ -41,6 +41,9 @@ export default class AuthProvider {
 
 		const savedUser = await this.prisma.user.findUnique({
 			where: { email: user.email },
+			include: {
+				favoriteTeams: true,
+			},
 		})
 
 		if (!savedUser) {
@@ -56,7 +59,15 @@ export default class AuthProvider {
 			throw new UnauthorizedException('Contraseña incorrecta')
 		}
 
-		return this.getUserPayloadAndToken(savedUser)
+		const authUser = this.getUserPayloadAndToken(savedUser)
+
+		return {
+			user: {
+				...authUser.user,
+				favoriteTeams: savedUser.favoriteTeams,
+			},
+			accessToken: authUser.accessToken,
+		}
 	}
 
 	private async validateUserRegistration(user: RegisterUser) {
