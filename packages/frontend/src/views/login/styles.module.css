@@ -1,5 +1,9 @@
 .container {
-	@apply flex flex-col gap-6;
+	@apply flex flex-col gap-6 items-center;
+}
+
+.card {
+	@apply mt-10 w-[90%] md:w-[60%] lg:w-[50%];
 }
 
 .form {
@@ -11,7 +15,7 @@
 }
 
 .title {
-	@apply text-2xl;
+	@apply text-lg md:text-2xl;
 }
 
 .register {

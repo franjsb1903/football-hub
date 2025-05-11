@@ -29,7 +29,7 @@ export default function LoginForm({
 
 	return (
 		<div className={cn(styles.container, className)} {...properties}>
-			<Card>
+			<Card className={styles.card}>
 				<CardHeader>
 					<CardTitle className={styles.title}>
 						Football Hub - Inicio de sesión
@@ -46,7 +46,7 @@ export default function LoginForm({
 								<Input
 									id="email"
 									type="email"
-									placeholder="m@example.com"
+									placeholder="email@example.com"
 									onChange={onChangeEmail}
 									value={email}
 									required
