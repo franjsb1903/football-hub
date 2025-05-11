@@ -10,7 +10,7 @@ import type { LoginUser, RegisterUser } from 'src/types'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 
-import { PrismaProvider } from '../prisma'
+import PrismaProvider from '../prisma'
 
 @Injectable()
 export default class AuthProvider {

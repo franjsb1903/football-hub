@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { Team } from '@/types'
 import request from '@/services/request'
@@ -9,6 +9,20 @@ export default function useFavoriteTeams(token?: string) {
 	const ids = useMemo(() => {
 		return favoriteTeams.map(({ id }) => id)
 	}, [favoriteTeams])
+
+	useEffect(() => {
+		if (token)
+			request
+				.get<Team[]>('request/favorite', {
+					headers: {
+						Authorization: `Bearer ${token}`,
+					},
+				})
+				.then((response) => setFavoriteTeams(response || []))
+				.catch(() => {
+					alert('No se han podido obtener tus equipos favoritos')
+				})
+	}, [token])
 
 	const isFavorite = (teamId: number) => {
 		return ids.includes(teamId)
@@ -22,7 +36,7 @@ export default function useFavoriteTeams(token?: string) {
 
 		setFavoriteTeams((previousState) => [...previousState, team])
 		request
-			.post('request/teams/favorite', team, {
+			.post('request/favorite', team, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
@@ -36,7 +50,7 @@ export default function useFavoriteTeams(token?: string) {
 			previousState.filter(({ id }) => id !== teamId),
 		)
 		request
-			.delete(`request/teams/favorite/${teamId}`, {
+			.delete(`request/favorite/${teamId}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},

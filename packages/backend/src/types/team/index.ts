@@ -4,6 +4,6 @@ export interface Team {
 	logo: string | null
 	country: string | null
 	code: string | null
-	founded: number | null
-	national: boolean
+	founded?: number | null
+	national?: boolean
 }

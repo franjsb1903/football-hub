@@ -2,6 +2,7 @@ import {
 	Body,
 	Controller,
 	Delete,
+	Get,
 	Inject,
 	Logger,
 	Param,
@@ -10,27 +11,46 @@ import {
 	UseGuards,
 } from '@nestjs/common'
 import { AuthGuard } from 'src/guards'
-import FootballFetcherProvider from 'src/providers/football-fetcher'
-import FavoriteTeamRepository from 'src/repositories/team'
+import { FootballFetcherProvider, FavoriteTeamProvider } from 'src/providers'
 import { Team } from 'src/types'
 
 @Controller('favorite')
 @UseGuards(AuthGuard)
-export default class FavoriteTeamsController {
+export default class FavoriteTeamController {
 	@Inject()
 	logger: Logger
 	@Inject()
 	footballFetcher: FootballFetcherProvider
 	@Inject()
-	favoriteTeamRepository: FavoriteTeamRepository
+	favoriteTeamProvider: FavoriteTeamProvider
 
-	@Post('')
+	@Get()
+	async getAll(@Request() request): Promise<Team[] | undefined> {
+		try {
+			const user = request.user
+			const userId = user.id
+
+			const teams = await this.favoriteTeamProvider.getAllByUser(userId)
+
+			return teams.map((team) => ({
+				id: team.teamId,
+				code: team.code,
+				country: team.country,
+				logo: team.teamLogo,
+				name: team.name,
+			}))
+		} catch (error) {
+			this.logger.error('Error saving favorite team', error)
+		}
+	}
+
+	@Post()
 	async saveFavoriteTeam(@Body() team: Team, @Request() request) {
 		try {
 			const user = request.user
 			const userId = user.id
 
-			return this.favoriteTeamRepository.saveFavoriteTeam(userId, team)
+			return this.favoriteTeamProvider.saveFavoriteTeam(userId, team)
 		} catch (error) {
 			this.logger.error('Error saving favorite team', error)
 		}
@@ -42,7 +62,7 @@ export default class FavoriteTeamsController {
 			const user = request.user
 			const userId = user.id
 
-			return this.favoriteTeamRepository.deleteFavoriteTeam(
+			return this.favoriteTeamProvider.deleteFavoriteTeam(
 				userId,
 				Number.parseInt(teamId),
 			)

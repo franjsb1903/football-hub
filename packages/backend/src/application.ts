@@ -10,11 +10,12 @@ import {
 	AuthProvider,
 	PrismaProvider,
 	FootballFetcherProvider,
+	FavoriteTeamProvider,
 } from './providers'
 import FavoriteTeamRepository from './repositories/team'
 import {
 	AuthController,
-	FavoriteTeamsController,
+	FavoriteTeamController,
 	TeamsController,
 } from './controllers'
 
@@ -33,12 +34,13 @@ import {
 			signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
 		}),
 	],
-	controllers: [AuthController, TeamsController, FavoriteTeamsController],
+	controllers: [AuthController, TeamsController, FavoriteTeamController],
 	providers: [
 		PrismaProvider,
 		AuthProvider,
 		FootballFetcherProvider,
 		FavoriteTeamRepository,
+		FavoriteTeamProvider,
 		Logger,
 	],
 })
