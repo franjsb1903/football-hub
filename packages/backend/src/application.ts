@@ -6,11 +6,17 @@ import { Logger, Module } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule } from '@nestjs/config'
 
-import { AuthController } from './controllers/auth'
-import { AuthProvider, PrismaProvider } from './providers'
-import { TeamsController } from './controllers/teams'
-import FootballFetcherProvider from './providers/football-fetcher'
+import {
+	AuthProvider,
+	PrismaProvider,
+	FootballFetcherProvider,
+} from './providers'
 import FavoriteTeamRepository from './repositories/team'
+import {
+	AuthController,
+	FavoriteTeamsController,
+	TeamsController,
+} from './controllers'
 
 @Module({
 	imports: [
@@ -27,7 +33,7 @@ import FavoriteTeamRepository from './repositories/team'
 			signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
 		}),
 	],
-	controllers: [AuthController, TeamsController],
+	controllers: [AuthController, TeamsController, FavoriteTeamsController],
 	providers: [
 		PrismaProvider,
 		AuthProvider,

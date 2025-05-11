@@ -3,7 +3,7 @@ import { AuthProvider } from 'src/providers'
 import type { LoginUser, RegisterUser } from 'src/types'
 
 @Controller('auth')
-export class AuthController {
+export default class AuthController {
 	@Inject()
 	private authProvider: AuthProvider
 
