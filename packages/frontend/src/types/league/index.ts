@@ -4,7 +4,7 @@ export interface League {
 	country: string
 	logo: string
 	flag: string
-	searon: number
+	season: number
 	round: string
 	standings: boolean
 }
