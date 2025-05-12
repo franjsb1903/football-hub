@@ -61,6 +61,9 @@ export default function ComingMatches({ team }: ComingMatchesProperties) {
 									</section>
 								</CardTitle>
 								<CardDescription className="text-center">
+									{fixture.league.name}
+								</CardDescription>
+								<CardDescription className="text-center">
 									{formatISODateToDDMMYYYY_HHmm(fixture.date)}
 								</CardDescription>
 							</article>
