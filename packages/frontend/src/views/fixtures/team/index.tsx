@@ -5,10 +5,6 @@ import { redirect } from 'next/navigation'
 import FixturesLayout from '@/layouts/fixtures-layout'
 import useFetchFixtures from './hooks/use-fetch-team-fixtures'
 
-interface ComingMatchesProperties {
-	team: number
-}
-
 import commonStyles from '../styles.module.css'
 import styles from './styles.module.css'
 import {
@@ -18,17 +14,10 @@ import {
 	CardTitle,
 } from '@/components/ui/card'
 import TeamLogo from '@/components/team-logo'
+import { formatISODateToDDMMYYYY_HHmm } from '@/utils/date'
 
-function formatISODateToDDMMYYYY_HHmm(isoString: string) {
-	const date = new Date(isoString)
-
-	const day = String(date.getDate()).padStart(2, '0')
-	const month = String(date.getMonth() + 1).padStart(2, '0') // getMonth() devuelve de 0 a 11, por eso sumamos 1
-	const year = date.getFullYear()
-	const hours = String(date.getHours()).padStart(2, '0')
-	const minutes = String(date.getMinutes()).padStart(2, '0')
-
-	return `${day}/${month}/${year} ${hours}:${minutes}`
+interface ComingMatchesProperties {
+	team: number
 }
 
 export default function ComingMatches({ team }: ComingMatchesProperties) {
@@ -40,19 +29,19 @@ export default function ComingMatches({ team }: ComingMatchesProperties) {
 		return redirect('/login')
 	}
 
-	console.log({ fixtures })
-
 	return (
 		<FixturesLayout>
 			<h1 className={commonStyles.title}>Próximos partidos</h1>
 			<section className={`${styles.list}`}>
 				{fixtures?.map((fixture) => (
-					<Card key={fixture.id}>
+					<Card key={fixture.id} className={styles.card}>
 						<CardHeader className={styles.cardHeader}>
 							<article className={styles.content}>
 								<CardTitle className={styles.cardTitle}>
 									<section className="flex gap-2 items-center justify-end w-[40%]">
-										{fixture.teams.home.name}
+										<span className={styles.teamNameLeft}>
+											{fixture.teams.home.name}
+										</span>
 										<TeamLogo
 											name={fixture.teams.home.name ?? ''}
 											logo={fixture.teams.home.logo ?? ''}
@@ -66,7 +55,9 @@ export default function ComingMatches({ team }: ComingMatchesProperties) {
 											logo={fixture.teams.away.logo ?? ''}
 											additionalClass="w-8 h-8"
 										/>
-										{fixture.teams.away.name}
+										<span className={styles.teamNameRight}>
+											{fixture.teams.away.name}
+										</span>
 									</section>
 								</CardTitle>
 								<CardDescription className="text-center">
