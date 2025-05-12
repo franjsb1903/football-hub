@@ -31,7 +31,25 @@ export default class FootballFetcherProvider {
 		}
 	}
 
-	async getFixtures(teamId: number) {
+	async getFixture(id: number) {
+		try {
+			const fixtures = await this.fetch<FixtureResponse[]>(
+				this.fixturesPath,
+				[`id=${id}`],
+			)
+
+			return fixtures.map((fixture) => ({
+				...fixture.fixture,
+				league: fixture.league,
+				teams: fixture.teams,
+			}))
+		} catch (error) {
+			this.logger.error('Error getting fixture', error)
+			throw new Error('Error getting fixture')
+		}
+	}
+
+	async getFixturesByTeam(teamId: number) {
 		try {
 			const actualDate = getSpainDate()
 
@@ -48,6 +66,7 @@ export default class FootballFetcherProvider {
 
 			return fixtures.map((fixture) => ({
 				...fixture.fixture,
+				league: fixture.league,
 				teams: fixture.teams,
 			}))
 		} catch (error) {

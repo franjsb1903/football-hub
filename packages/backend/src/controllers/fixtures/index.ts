@@ -19,9 +19,21 @@ export default class FixturesController {
 	logger: Logger
 
 	@Get('/:id')
-	async getNextFixtures(@Param('id') teamId: number) {
+	async getFixture(@Param('id') id: number) {
 		try {
-			return this.footballFetcher.getFixtures(teamId)
+			return this.footballFetcher.getFixture(id)
+		} catch (error) {
+			this.logger.error(`Error getting fixture ${id}`, error)
+			throw new InternalServerErrorException(
+				`Ha ocurrido un error obteniendo el partido`,
+			)
+		}
+	}
+
+	@Get('/team/:id')
+	async getNextTeamFixtures(@Param('id') teamId: number) {
+		try {
+			return this.footballFetcher.getFixturesByTeam(teamId)
 		} catch (error) {
 			this.logger.error(`Error getting fixtures of team ${teamId}`, error)
 			throw new InternalServerErrorException(
