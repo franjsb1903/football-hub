@@ -1,3 +1,16 @@
 import { Team, Venue } from 'src/types'
+import { League } from 'src/types/league'
 
 export type SearchTeamResponse = Array<{ team: Team; venue: Venue }>
+
+export interface FixtureResponse {
+	id: number
+	referee: string
+	date: string
+	venue: Pick<Venue, 'id' | 'name' | 'city'>
+	league: League
+	teams: {
+		home: Pick<Team, 'id' | 'name' | 'logo'>
+		away: Pick<Team, 'id' | 'name' | 'logo'>
+	}
+}

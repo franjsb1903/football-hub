@@ -18,6 +18,7 @@ import {
 	FavoriteTeamController,
 	TeamsController,
 } from './controllers'
+import FixturesController from './controllers/fixtures'
 
 @Module({
 	imports: [
@@ -34,7 +35,12 @@ import {
 			signOptions: { expiresIn: process.env.JWT_EXPIRES_IN },
 		}),
 	],
-	controllers: [AuthController, TeamsController, FavoriteTeamController],
+	controllers: [
+		AuthController,
+		TeamsController,
+		FavoriteTeamController,
+		FixturesController,
+	],
 	providers: [
 		PrismaProvider,
 		AuthProvider,

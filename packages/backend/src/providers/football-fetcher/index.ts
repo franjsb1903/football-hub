@@ -1,8 +1,9 @@
 import { readFile } from 'node:fs/promises'
 
 import { Inject, Injectable, Logger } from '@nestjs/common'
+import { getSpainDate } from 'src/utils/date'
 
-import { SearchTeamResponse } from './types'
+import { FixtureResponse, SearchTeamResponse } from './types'
 
 @Injectable()
 export default class FootballFetcherProvider {
@@ -12,6 +13,10 @@ export default class FootballFetcherProvider {
 	private isMocked = process.env.IS_MOCKED === 'true'
 	private baseUrl = process.env.API_FOOTBALL_URL || ''
 	private teamsPath = process.env.TEAMS_PATH || 'teams'
+	private fixturesPath = process.env.FIXTURES_PATH || 'fixtures'
+	private season = 2023
+	private maxDate = '2023-12-31'
+	private timezone = 'Europe/Madrid'
 
 	async searchTeams(teamName: string) {
 		try {
@@ -23,6 +28,23 @@ export default class FootballFetcherProvider {
 		} catch (error) {
 			this.logger.error('Error searching for teams', error)
 			throw new Error('Error searching for teams')
+		}
+	}
+
+	async getFixtures(teamId: number) {
+		try {
+			const actualDate = getSpainDate()
+
+			return this.fetch<FixtureResponse>(this.fixturesPath, [
+				`season=${this.season}`,
+				`from=${actualDate}`,
+				`to=${this.maxDate}`,
+				`timezone=${this.timezone}`,
+				`team=${teamId}`,
+			])
+		} catch (error) {
+			this.logger.error('Error getting fixtures', error)
+			throw new Error('Error getting fixtures')
 		}
 	}
 
