@@ -47,7 +47,7 @@ export default function Teams() {
 					) : (
 						<TeamList
 							teams={teams}
-							heightClass="h-[200px] md:h-[400px]"
+							additionalClass="h-[200px] md:h-[400px]"
 							Action={({ team }) =>
 								isFavorite(team.id) ? (
 									<FilledStar

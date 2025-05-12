@@ -12,17 +12,17 @@ import {
 
 interface TeamListProperties {
 	teams?: Team[]
-	heightClass?: string
+	additionalClass?: string
 	Action: React.ElementType<{ team: Team }>
 }
 
 export default function TeamList({
 	teams,
-	heightClass,
+	additionalClass,
 	Action,
 }: TeamListProperties) {
 	return (
-		<section className={`${styles.list} ${heightClass}`}>
+		<section className={`${styles.list} ${additionalClass}`}>
 			{teams?.map((team) => (
 				<Card key={team.id}>
 					<CardHeader className={styles.cardHeader}>
