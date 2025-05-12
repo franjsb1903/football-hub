@@ -35,13 +35,18 @@ export default class FootballFetcherProvider {
 		try {
 			const actualDate = getSpainDate()
 
-			return this.fetch<FixtureResponse>(this.fixturesPath, [
-				`season=${this.season}`,
-				`from=${actualDate}`,
-				`to=${this.maxDate}`,
-				`timezone=${this.timezone}`,
-				`team=${teamId}`,
-			])
+			const fixtures = await this.fetch<FixtureResponse[]>(
+				this.fixturesPath,
+				[
+					`season=${this.season}`,
+					`from=${actualDate}`,
+					`to=${this.maxDate}`,
+					`timezone=${this.timezone}`,
+					`team=${teamId}`,
+				],
+			)
+
+			return fixtures.map((fixture) => fixture.fixture)
 		} catch (error) {
 			this.logger.error('Error getting fixtures', error)
 			throw new Error('Error getting fixtures')
