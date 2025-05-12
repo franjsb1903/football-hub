@@ -8,7 +8,7 @@ export default function useFetchFixtures(team: number, token?: string) {
 
 	useEffect(() => {
 		request
-			.get<Fixture[]>(`request/fixtures/${team}`, {
+			.get<Fixture[]>(`request/fixtures/team/${team}`, {
 				headers: {
 					Authorization: `Bearer ${token}`,
 				},
