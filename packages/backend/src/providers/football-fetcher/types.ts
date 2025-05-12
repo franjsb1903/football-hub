@@ -9,7 +9,6 @@ export interface FixtureResponse {
 		referee: string
 		date: string
 		venue: Pick<Venue, 'id' | 'name' | 'city'>
-		league: League
 		teams: {
 			home: Pick<Team, 'id' | 'name' | 'logo'>
 			away: Pick<Team, 'id' | 'name' | 'logo'>
@@ -27,4 +26,5 @@ export interface FixtureResponse {
 			logo: string
 		}
 	}
+	league: League
 }
