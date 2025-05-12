@@ -1,0 +1,48 @@
+[
+	{
+		"id": 1030326,
+		"referee": "F. Hernández",
+		"timezone": "UTC",
+		"date": "2023-08-03T01:00:00+00:00",
+		"timestamp": 1691024400,
+		"periods": {
+			"first": 1691024400,
+			"second": 1691028000
+		},
+		"venue": {
+			"id": 11905,
+			"name": "Estadio BBVA",
+			"city": "Guadalupe"
+		},
+		"status": {
+			"long": "Match Finished",
+			"short": "FT",
+			"elapsed": 90,
+			"extra": null
+		},
+		"league": {
+			"id": 667,
+			"name": "Friendlies Clubs",
+			"country": "World",
+			"logo": "https://media.api-sports.io/football/leagues/667.png",
+			"flag": null,
+			"season": 2023,
+			"round": "Club Friendlies 1",
+			"standings": false
+		},
+		"teams": {
+			"home": {
+				"id": 530,
+				"name": "Atletico Madrid",
+				"logo": "https://media.api-sports.io/football/teams/530.png",
+				"winner": null
+			},
+			"away": {
+				"id": 548,
+				"name": "Real Sociedad",
+				"logo": "https://media.api-sports.io/football/teams/548.png",
+				"winner": null
+			}
+		}
+	}
+]

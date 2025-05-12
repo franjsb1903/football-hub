@@ -34,7 +34,13 @@ export default function ComingMatches({ team }: ComingMatchesProperties) {
 			<h1 className={commonStyles.title}>Próximos partidos</h1>
 			<section className={`${styles.list}`}>
 				{fixtures?.map((fixture) => (
-					<Card key={fixture.id} className={styles.card}>
+					<Card
+						key={fixture.id}
+						className={styles.card}
+						onClick={() =>
+							redirect(`/fixtures/fixture/${fixture.id}`)
+						}
+					>
 						<CardHeader className={styles.cardHeader}>
 							<article className={styles.content}>
 								<CardTitle className={styles.cardTitle}>

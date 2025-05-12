@@ -39,10 +39,10 @@ export default class FootballFetcherProvider {
 			)
 
 			return fixtures.map((fixture) => ({
-				...fixture.fixture,
+				...fixture,
 				league: fixture.league,
 				teams: fixture.teams,
-			}))
+			}))[0]
 		} catch (error) {
 			this.logger.error('Error getting fixture', error)
 			throw new Error('Error getting fixture')
