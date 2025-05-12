@@ -15,4 +15,16 @@ export interface FixtureResponse {
 			away: Pick<Team, 'id' | 'name' | 'logo'>
 		}
 	}
+	teams: {
+		home: {
+			id: number
+			name: string
+			logo: string
+		}
+		away: {
+			id: number
+			name: string
+			logo: string
+		}
+	}
 }
