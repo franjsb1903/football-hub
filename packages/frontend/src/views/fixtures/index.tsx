@@ -30,7 +30,9 @@ export default function Fixtures() {
 				<TeamList
 					teams={favoriteTeams}
 					Action={({ team }) => (
-						<Button onClick={() => console.log({ team })}>
+						<Button
+							onClick={() => redirect(`/fixtures/${team.id}`)}
+						>
 							Ver
 						</Button>
 					)}

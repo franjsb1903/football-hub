@@ -18,7 +18,7 @@ export default class FixturesController {
 	@Inject()
 	logger: Logger
 
-	@Get('/coming/:id')
+	@Get('/:id')
 	async getNextFixtures(@Param('id') teamId: number) {
 		try {
 			return this.footballFetcher.getFixtures(teamId)
