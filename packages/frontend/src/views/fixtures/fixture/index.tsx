@@ -2,7 +2,6 @@ import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 
 import FixturesLayout from '@/layouts/fixtures-layout'
-import useFetchData from './hooks/use-fetch-data'
 import {
 	Card,
 	CardDescription,
@@ -12,14 +11,19 @@ import {
 import TeamLogo from '@/components/team-logo'
 import { formatISODateToDDMMYYYY_HHmm } from '@/utils/date'
 import styles from './styles.module.css'
+import { useFetchData } from '@/hooks'
+import { Fixture } from '@/types'
 
 interface FixtureProperties {
 	id: number
 }
 
-export default function Fixture({ id }: FixtureProperties) {
+export default function FixtureView({ id }: FixtureProperties) {
 	const { data, status } = useSession()
-	const { fixture } = useFetchData(id, data?.accessToken)
+	const { data: fixture } = useFetchData<Fixture>(
+		`request/fixtures/${id}`,
+		data?.accessToken,
+	)
 
 	if (status === 'unauthenticated') {
 		return redirect('/login')

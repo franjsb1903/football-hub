@@ -3,15 +3,17 @@
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 
-import { useFetchFavoriteTeams } from '@/hooks'
+import { useFetchData } from '@/hooks'
 import TeamList from '../teams/list'
 import styles from './styles.module.css'
 import { Button } from '@/components/ui/button'
 import FixturesLayout from '@/layouts/fixtures-layout'
+import { Team } from '@/types'
 
 export default function Fixtures() {
 	const { data, status } = useSession()
-	const { favoriteTeams, isLoading } = useFetchFavoriteTeams(
+	const { data: favoriteTeams, isLoading } = useFetchData<Team[]>(
+		'request/favorite',
 		data?.accessToken,
 	)
 

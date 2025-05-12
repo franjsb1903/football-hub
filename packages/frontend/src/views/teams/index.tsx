@@ -77,7 +77,9 @@ export default function Teams() {
 				</p>
 				<section className={styles.myTeamsContainer}>
 					{isLoading && <p>Cargando...</p>}
-					{favoriteTeams.length > 0 && !isLoading ? (
+					{favoriteTeams &&
+					favoriteTeams?.length > 0 &&
+					!isLoading ? (
 						<TeamList
 							teams={favoriteTeams}
 							Action={({ team }) =>

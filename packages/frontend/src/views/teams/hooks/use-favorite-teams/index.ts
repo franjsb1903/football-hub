@@ -2,26 +2,29 @@ import { useMemo } from 'react'
 
 import { Team } from '@/types'
 import request from '@/services/request'
-import { useFetchFavoriteTeams } from '@/hooks'
+import { useFetchData } from '@/hooks'
 
 export default function useFavoriteTeams(token?: string) {
-	const { favoriteTeams, isLoading, setFavoriteTeams } =
-		useFetchFavoriteTeams(token)
+	const {
+		data: favoriteTeams,
+		isLoading,
+		setData: setFavoriteTeams,
+	} = useFetchData<Team[]>('request/favorite', token)
 
 	const ids = useMemo(() => {
-		return favoriteTeams.map(({ id }) => id)
+		return favoriteTeams?.map(({ id }) => id)
 	}, [favoriteTeams])
 
 	const isMaximumReached = useMemo(() => {
-		return favoriteTeams.length >= 5
+		return favoriteTeams ? favoriteTeams?.length >= 5 : true
 	}, [favoriteTeams])
 
 	const isFavorite = (teamId: number) => {
-		return ids.includes(teamId)
+		return ids?.includes(teamId)
 	}
 
 	const addAsFavorite = async (team: Team) => {
-		if (favoriteTeams.length >= 5) {
+		if (favoriteTeams?.length && favoriteTeams?.length >= 5) {
 			alert('Ya has seleccionado todos los equipos')
 			return
 		}
@@ -32,7 +35,10 @@ export default function useFavoriteTeams(token?: string) {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			setFavoriteTeams((previousState) => [...previousState, team])
+			setFavoriteTeams((previousState) => [
+				...(previousState || []),
+				team,
+			])
 		} catch {
 			alert('Ha ocurrido un problema al guardar tu equipo como favorito')
 		}
@@ -45,8 +51,9 @@ export default function useFavoriteTeams(token?: string) {
 					Authorization: `Bearer ${token}`,
 				},
 			})
-			setFavoriteTeams((previousState) =>
-				previousState.filter(({ id }) => id !== teamId),
+			setFavoriteTeams(
+				(previousState) =>
+					previousState?.filter(({ id }) => id !== teamId) ?? [],
 			)
 		} catch {
 			alert('Ha ocurrido un problema al quitar tu equipo como favorito')
