@@ -12,7 +12,7 @@ export default function TeamLogo({
 	additionalClass,
 }: TeamLogoProperties) {
 	return (
-		<div className={`relative ${additionalClass ?? 'w-[20%'} `}>
+		<div className={`relative ${additionalClass ?? 'w-[20%]'}`}>
 			<Image
 				src={logo || '/placeholder-logo.png'}
 				alt={`Logo de ${name}`}

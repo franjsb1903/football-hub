@@ -14,3 +14,8 @@
 .content {
 	@apply flex flex-col w-full gap-2;
 }
+
+.list {
+	@apply overflow-y-auto;
+	@apply flex flex-col gap-4;
+}

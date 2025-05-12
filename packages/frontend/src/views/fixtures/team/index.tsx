@@ -51,23 +51,23 @@ export default function ComingMatches({ team }: ComingMatchesProperties) {
 						<CardHeader className={styles.cardHeader}>
 							<article className={styles.content}>
 								<CardTitle className={styles.cardTitle}>
-									<span className="flex gap-2 items-center justify-end w-[40%]">
+									<section className="flex gap-2 items-center justify-end w-[40%]">
 										{fixture.teams.home.name}
 										<TeamLogo
 											name={fixture.teams.home.name ?? ''}
 											logo={fixture.teams.home.logo ?? ''}
 											additionalClass="w-8 h-8"
 										/>
-									</span>
+									</section>
 									<span>-</span>
-									<span className="flex gap-2 items-center justify-start w-[40%]">
+									<section className="flex gap-2 items-center justify-start w-[40%]">
 										<TeamLogo
 											name={fixture.teams.away.name ?? ''}
 											logo={fixture.teams.away.logo ?? ''}
 											additionalClass="w-8 h-8"
 										/>
 										{fixture.teams.away.name}
-									</span>
+									</section>
 								</CardTitle>
 								<CardDescription className="text-center">
 									{formatISODateToDDMMYYYY_HHmm(fixture.date)}
