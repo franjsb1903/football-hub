@@ -1,0 +1,16 @@
+.section {
+	@apply w-full md:w-[50%];
+	@apply flex flex-col gap-2;
+}
+
+.cardHeader {
+	@apply flex flex-row gap-2;
+}
+
+.cardTitle {
+	@apply flex flex-row gap-4 justify-center items-center;
+}
+
+.content {
+	@apply flex flex-col w-full gap-2;
+}

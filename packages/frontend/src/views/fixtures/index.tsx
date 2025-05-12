@@ -7,6 +7,7 @@ import { useFetchFavoriteTeams } from '@/hooks'
 import TeamList from '../teams/list'
 import styles from './styles.module.css'
 import { Button } from '@/components/ui/button'
+import FixturesLayout from '@/layouts/fixtures-layout'
 
 export default function Fixtures() {
 	const { data, status } = useSession()
@@ -19,7 +20,7 @@ export default function Fixtures() {
 	}
 
 	return (
-		<div className={styles.container}>
+		<FixturesLayout>
 			<h1 className={styles.title}>Próximos partidos</h1>
 			<h3 className={styles.subtitle}>
 				Selecciona un equipo para ver sus próximos partidos
@@ -38,6 +39,6 @@ export default function Fixtures() {
 					)}
 				/>
 			)}
-		</div>
+		</FixturesLayout>
 	)
 }
