@@ -2,6 +2,8 @@
 
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import { FaRegStar as Star } from 'react-icons/fa6'
+import { FaStar as FilledStar } from 'react-icons/fa6'
 
 import styles from './styles.module.css'
 import SearchInput from '@/components/search-input'
@@ -45,10 +47,24 @@ export default function Teams() {
 					) : (
 						<TeamList
 							teams={teams}
-							isFavorite={isFavorite}
-							toggleFavorite={toggleFavorite}
-							showStar
 							heightClass="h-[200px] md:h-[400px]"
+							Action={({ team }) =>
+								isFavorite(team.id) ? (
+									<FilledStar
+										onClick={() =>
+											toggleFavorite &&
+											toggleFavorite(team)
+										}
+									/>
+								) : (
+									<Star
+										onClick={() =>
+											toggleFavorite &&
+											toggleFavorite(team)
+										}
+									/>
+								)
+							}
 						/>
 					)}
 				</section>
@@ -64,9 +80,23 @@ export default function Teams() {
 					{favoriteTeams.length > 0 && !isLoading ? (
 						<TeamList
 							teams={favoriteTeams}
-							isFavorite={isFavorite}
-							toggleFavorite={toggleFavorite}
-							showStar
+							Action={({ team }) =>
+								isFavorite(team.id) ? (
+									<FilledStar
+										onClick={() =>
+											toggleFavorite &&
+											toggleFavorite(team)
+										}
+									/>
+								) : (
+									<Star
+										onClick={() =>
+											toggleFavorite &&
+											toggleFavorite(team)
+										}
+									/>
+								)
+							}
 						/>
 					) : isLoading ? undefined : (
 						<p className={styles.empty}>

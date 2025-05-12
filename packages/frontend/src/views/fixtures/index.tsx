@@ -6,6 +6,7 @@ import { redirect } from 'next/navigation'
 import { useFetchFavoriteTeams } from '@/hooks'
 import TeamList from '../teams/list'
 import styles from './styles.module.css'
+import { Button } from '@/components/ui/button'
 
 export default function Fixtures() {
 	const { data, status } = useSession()
@@ -26,7 +27,14 @@ export default function Fixtures() {
 			{isLoading ? (
 				<p>Cargando...</p>
 			) : (
-				<TeamList teams={favoriteTeams} showStar={false} />
+				<TeamList
+					teams={favoriteTeams}
+					Action={({ team }) => (
+						<Button onClick={() => console.log({ team })}>
+							Ver
+						</Button>
+					)}
+				/>
 			)}
 		</div>
 	)

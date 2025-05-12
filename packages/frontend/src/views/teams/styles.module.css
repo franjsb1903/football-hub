@@ -41,4 +41,5 @@
 }
 
 .myTeamsContainer {
+	@apply mb-16;
 }

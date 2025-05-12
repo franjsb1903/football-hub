@@ -1,5 +1,5 @@
 .container {
-	@apply mx-10 md:mx-32;
+	@apply md:p-10 mx-10 md:mx-32;
 	@apply flex flex-col gap-6;
 }
 
