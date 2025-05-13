@@ -2,6 +2,7 @@ import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 import { GiWhistle, GiFlyingFlag } from 'react-icons/gi'
 import { MdStadium } from 'react-icons/md'
+import { useMemo } from 'react'
 
 import FixturesLayout from '@/layouts/fixtures-layout'
 import {
@@ -27,6 +28,20 @@ export default function FixtureView({ id }: FixtureProperties) {
 		`request/fixtures/${id}`,
 		data?.accessToken,
 	)
+
+	const playersHomeTeam = useMemo(() => {
+		return fixture?.players.find(
+			(item) => item.team.id === fixture.teams.home.id,
+		)?.players
+	}, [fixture])
+
+	const playersAwayTeam = useMemo(() => {
+		return fixture?.players.find(
+			(item) => item.team.id === fixture.teams.away.id,
+		)?.players
+	}, [fixture])
+
+	console.log({ playersHomeTeam })
 
 	if (status === 'unauthenticated') {
 		return redirect('/login')
@@ -78,6 +93,45 @@ export default function FixtureView({ id }: FixtureProperties) {
 						<MdStadium /> {fixture?.venue.name}
 					</span>
 				</CardContent>
+			</Card>
+			<Card>
+				<CardHeader>
+					<CardTitle className={styles.playersTitle}>
+						Equipos
+					</CardTitle>
+				</CardHeader>
+				<div className={styles.playersCard}>
+					<CardContent className={styles.playersCardContent}>
+						{playersHomeTeam?.map((player) => (
+							<section
+								key={player.id}
+								className={styles.playersInfo}
+							>
+								<TeamLogo
+									logo={player.photo || ''}
+									name={player.name}
+									additionalClass="w-8 h-8"
+								/>
+								<span key={player.id}>{player.name}</span>
+							</section>
+						))}
+					</CardContent>
+					<CardContent className={styles.playersCardContent}>
+						{playersAwayTeam?.map((player) => (
+							<section
+								key={player.id}
+								className={styles.playersInfo}
+							>
+								<TeamLogo
+									logo={player.photo || ''}
+									name={player.name}
+									additionalClass="w-8 h-8"
+								/>
+								<span key={player.id}>{player.name}</span>
+							</section>
+						))}
+					</CardContent>
+				</div>
 			</Card>
 		</FixturesLayout>
 	)

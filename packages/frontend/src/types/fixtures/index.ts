@@ -1,4 +1,5 @@
 import { League } from '../league'
+import { Player } from '../player'
 import { Team } from '../team'
 import { Venue } from '../venue'
 
@@ -12,4 +13,8 @@ export interface Fixture {
 		home: Pick<Team, 'id' | 'name' | 'logo'>
 		away: Pick<Team, 'id' | 'name' | 'logo'>
 	}
+	players: {
+		team: Pick<Team, 'id' | 'name' | 'logo'>
+		players: Player[]
+	}[]
 }
