@@ -1,7 +1,3 @@
-.cardHeader {
-	@apply flex flex-row gap-2 p-8;
-}
-
 .cardTitle {
 	@apply flex flex-row gap-4 justify-center items-center;
 }
@@ -26,5 +22,9 @@
 	& span {
 		@apply text-sm text-gray-400;
 		@apply flex items-center gap-1;
+	}
+
+	& svg {
+		@apply text-gray-700;
 	}
 }

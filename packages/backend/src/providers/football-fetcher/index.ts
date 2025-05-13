@@ -37,7 +37,7 @@ export default class FootballFetcherProvider {
 				`id=${id}`,
 			])
 
-			return result
+			return result?.[0]
 		} catch (error) {
 			this.logger.error('Error getting team', error)
 			throw new Error('Error getting team')

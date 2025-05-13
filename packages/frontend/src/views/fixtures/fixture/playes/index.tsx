@@ -2,6 +2,7 @@ import { useMemo } from 'react'
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import styles from './styles.module.css'
+import commonStyles from '../styles.module.css'
 import { Fixture } from '@/types'
 import Image from '@/components/image'
 
@@ -25,7 +26,9 @@ export default function Players({ fixture }: PlayersProperties) {
 	return (
 		<Card>
 			<CardHeader>
-				<CardTitle className={styles.playersTitle}>Equipos</CardTitle>
+				<CardTitle className={commonStyles.cardTitle}>
+					Equipos
+				</CardTitle>
 			</CardHeader>
 			<div className={styles.playersCard}>
 				<CardContent className={styles.playersCardContent}>

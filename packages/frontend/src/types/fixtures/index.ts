@@ -17,8 +17,10 @@ export interface Fixture {
 		team: Pick<Team, 'id' | 'name' | 'logo'>
 		players: Player[]
 	}[]
-	rival: {
-		team: Team
-		venue: Venue
-	}
+	rival: Rival
+}
+
+export interface Rival {
+	team: Team
+	venue: Venue
 }

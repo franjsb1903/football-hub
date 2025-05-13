@@ -6,6 +6,7 @@ import { useFetchData } from '@/hooks'
 import Players from './playes'
 import Info from './info'
 import { Fixture } from '@/types'
+import RivalInfo from './rival'
 
 interface FixtureProperties {
 	id: number
@@ -25,6 +26,7 @@ export default function FixtureView({ id }: FixtureProperties) {
 	return (
 		<FixturesLayout>
 			<Info fixture={fixture} />
+			<RivalInfo rival={fixture?.rival} />
 			<Players fixture={fixture} />
 		</FixturesLayout>
 	)
