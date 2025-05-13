@@ -12,30 +12,24 @@ import {
 } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import styles from './styles.module.css'
-import { useLogin } from './hooks/use-login'
+import styles from '../styles.module.css'
+import { useRegister } from './hooks/use-register'
 
-export default function LoginForm({
+export default function RegisterForm({
 	className,
 	...properties
 }: React.ComponentPropsWithoutRef<'div'>) {
-	const {
-		email,
-		password,
-		handleCredentialsSignIn,
-		onChangeEmail,
-		onChangePassword,
-	} = useLogin()
+	const { user, onChangeUser, handleCredentialsSignIn } = useRegister()
 
 	return (
 		<div className={cn(styles.container, className)} {...properties}>
 			<Card className={styles.card}>
 				<CardHeader>
 					<CardTitle className={styles.title}>
-						Football Hub - Inicio de sesión
+						Football Hub - Registro
 					</CardTitle>
 					<CardDescription>
-						Inicia sesión para acceder a tu cuenta
+						Regístrate para acceder a la plataforma
 					</CardDescription>
 				</CardHeader>
 				<CardContent>
@@ -47,29 +41,47 @@ export default function LoginForm({
 									id="email"
 									type="email"
 									placeholder="email@example.com"
-									onChange={onChangeEmail}
-									value={email}
 									required
+									value={user.email}
+									onChange={onChangeUser}
+								/>
+							</div>
+							<div className={styles.field}>
+								<Label htmlFor="email">Nombre</Label>
+								<Input
+									id="name"
+									type="text"
+									placeholder="Teimas"
+									required
+									value={user.name}
+									onChange={onChangeUser}
 								/>
 							</div>
 							<div className={styles.field}>
 								<Label htmlFor="password">Contraseña</Label>
-
 								<Input
 									id="password"
 									type="password"
 									required
-									value={password}
-									onChange={onChangePassword}
+									value={user.password}
+									onChange={onChangeUser}
+								/>
+							</div>
+							<div className={styles.field}>
+								<Label htmlFor="repeatPassword">
+									Repite tu contraseña
+								</Label>
+								<Input
+									id="repeatPassword"
+									type="password"
+									required
+									value={user.repeatPassword}
+									onChange={onChangeUser}
 								/>
 							</div>
 							<Button type="submit" className={styles.button}>
-								Iniciar sesión
+								Regístrate
 							</Button>
-						</div>
-						<div className={styles.register}>
-							¿No tienes cuenta?{' '}
-							<a href="/register">Regístrate</a>
 						</div>
 					</form>
 				</CardContent>

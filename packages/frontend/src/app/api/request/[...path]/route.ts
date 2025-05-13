@@ -10,7 +10,6 @@ export async function GET(
 	const { path } = await params
 
 	const urlPath = Array.isArray(path) ? path.join('/') : path
-	console.log({ urlPath })
 	const searchParameters = request.nextUrl.searchParams
 
 	const parameters = searchParameters.entries()
@@ -121,6 +120,9 @@ function handleError(error: any) {
 	} else if (error.message === 'Unauthorized') {
 		errorMessage = 'Unauthorized'
 		statusCode = 401
+	} else if (error.message === 'Conflict') {
+		errorMessage = 'Conflict'
+		statusCode = 409
 	} else {
 		errorMessage = error.message
 		statusCode = 500

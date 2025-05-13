@@ -1,25 +1,31 @@
 import { signIn } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import React, { FormEventHandler, useState } from 'react'
 
 export function useLogin() {
 	const [email, setEmail] = useState('')
 	const [password, setPassword] = useState('')
 
+	const router = useRouter()
+
 	const handleCredentialsSignIn: FormEventHandler<HTMLFormElement> = async (
 		event,
 	) => {
 		event.preventDefault()
 
-		const response = await signIn('credentials', {
-			email,
-			password,
-			redirect: false,
-		})
+		try {
+			const response = await signIn('credentials', {
+				email,
+				password,
+				redirect: false,
+			})
 
-		if (response && response.ok) {
-			redirect('/teams')
-		} else {
+			if (response && response.ok) {
+				router.push('/teams')
+			} else {
+				alert('No se ha podido iniciar sesión')
+			}
+		} catch {
 			alert('No se ha podido iniciar sesión')
 		}
 	}
