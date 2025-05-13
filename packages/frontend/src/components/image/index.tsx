@@ -1,20 +1,16 @@
-import Image from 'next/image'
+import NextImage from 'next/image'
 
-interface TeamLogoProperties {
-	logo: string
+interface ImageProperties {
+	src: string
 	name: string
 	additionalClass?: string
 }
 
-export default function TeamLogo({
-	logo,
-	name,
-	additionalClass,
-}: TeamLogoProperties) {
+export default function Image({ src, name, additionalClass }: ImageProperties) {
 	return (
 		<div className={`relative ${additionalClass ?? 'w-[20%]'}`}>
-			<Image
-				src={logo || '/placeholder-logo.png'}
+			<NextImage
+				src={src || '/placeholder-logo.png'}
 				alt={`Logo de ${name}`}
 				fill
 				className="object-contain"

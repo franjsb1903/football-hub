@@ -12,7 +12,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from '@/components/ui/card'
-import TeamLogo from '@/components/team-logo'
+import Image from '@/components/image'
 import { formatISODateToDDMMYYYY_HHmm } from '@/utils/date'
 import styles from './styles.module.css'
 import { useFetchData } from '@/hooks'
@@ -57,9 +57,9 @@ export default function FixtureView({ id }: FixtureProperties) {
 								<span className={styles.teamNameLeft}>
 									{fixture?.teams.home.name}
 								</span>
-								<TeamLogo
+								<Image
 									name={fixture?.teams.home.name ?? ''}
-									logo={fixture?.teams.home.logo ?? ''}
+									src={fixture?.teams.home.logo ?? ''}
 									additionalClass="w-8 h-8"
 								/>
 							</section>
@@ -69,9 +69,9 @@ export default function FixtureView({ id }: FixtureProperties) {
 								)}
 							</CardDescription>
 							<section className="flex gap-2 items-center justify-start w-[40%]">
-								<TeamLogo
+								<Image
 									name={fixture?.teams.away.name ?? ''}
-									logo={fixture?.teams.away.logo ?? ''}
+									src={fixture?.teams.away.logo ?? ''}
 									additionalClass="w-8 h-8"
 								/>
 								<span className={styles.teamNameRight}>
@@ -107,8 +107,8 @@ export default function FixtureView({ id }: FixtureProperties) {
 								key={player.id}
 								className={styles.playersInfo}
 							>
-								<TeamLogo
-									logo={player.photo || ''}
+								<Image
+									src={player.photo || ''}
 									name={player.name}
 									additionalClass="w-8 h-8"
 								/>
@@ -122,8 +122,8 @@ export default function FixtureView({ id }: FixtureProperties) {
 								key={player.id}
 								className={styles.playersInfo}
 							>
-								<TeamLogo
-									logo={player.photo || ''}
+								<Image
+									src={player.photo || ''}
 									name={player.name}
 									additionalClass="w-8 h-8"
 								/>
