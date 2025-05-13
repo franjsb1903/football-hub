@@ -12,7 +12,7 @@ export default function useSearch(token?: string) {
 	useEffect(() => {
 		if (debouncedSearchTerm) {
 			request
-				.get<Team[]>('request/teams', {
+				.get<Team[]>(`request/teams?search=${debouncedSearchTerm}`, {
 					headers: {
 						Authorization: `Bearer ${token}`,
 					},
