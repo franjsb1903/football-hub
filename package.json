@@ -4,8 +4,8 @@
 	"main": "index.js",
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
-		"lint": "eslint \"{packages/**/*.{js,ts,jsx,tsx},*.{js,ts,jsx,tsx}}\" --fix",
-		"format": "prettier \"{packages/**/*.{js,ts,jsx,tsx,json,css,md},*.{js,ts,jsx,tsx,json,css,md}}\" --write",
+		"lint": "eslint --fix .",
+		"format": "prettier --write .",
 		"prepare": "husky",
 		"dev:backend": "npm run start:dev --workspace packages/backend",
 		"dev:frontend": "npm run dev --workspace packages/frontend",

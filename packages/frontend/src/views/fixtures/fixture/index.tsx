@@ -1,9 +1,12 @@
 import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
+import { GiWhistle, GiFlyingFlag } from 'react-icons/gi'
+import { MdStadium } from 'react-icons/md'
 
 import FixturesLayout from '@/layouts/fixtures-layout'
 import {
 	Card,
+	CardContent,
 	CardDescription,
 	CardHeader,
 	CardTitle,
@@ -33,7 +36,7 @@ export default function FixtureView({ id }: FixtureProperties) {
 		<FixturesLayout>
 			<Card>
 				<CardHeader className={styles.cardHeader}>
-					<article className={styles.content}>
+					<article>
 						<CardTitle className={styles.cardTitle}>
 							<section className="flex gap-2 items-center justify-end w-[40%]">
 								<span className={styles.teamNameLeft}>
@@ -45,7 +48,11 @@ export default function FixtureView({ id }: FixtureProperties) {
 									additionalClass="w-8 h-8"
 								/>
 							</section>
-							<span>-</span>
+							<CardDescription className="text-center">
+								{formatISODateToDDMMYYYY_HHmm(
+									fixture?.date ?? '',
+								)}
+							</CardDescription>
 							<section className="flex gap-2 items-center justify-start w-[40%]">
 								<TeamLogo
 									name={fixture?.teams.away.name ?? ''}
@@ -57,14 +64,20 @@ export default function FixtureView({ id }: FixtureProperties) {
 								</span>
 							</section>
 						</CardTitle>
-						<CardDescription className="text-center">
-							{fixture?.league.name}
-						</CardDescription>
-						<CardDescription className="text-center">
-							{formatISODateToDDMMYYYY_HHmm(fixture?.date ?? '')}
-						</CardDescription>
 					</article>
 				</CardHeader>
+				<CardContent className={styles.content}>
+					<span>
+						<GiWhistle /> {fixture?.referee}
+					</span>
+					<span>
+						<GiFlyingFlag /> {fixture?.league.name} -{' '}
+						{fixture?.league.round}
+					</span>
+					<span>
+						<MdStadium /> {fixture?.venue.name}
+					</span>
+				</CardContent>
 			</Card>
 		</FixturesLayout>
 	)
