@@ -19,3 +19,8 @@ export interface FixtureResponse {
 		}[]
 	}[]
 }
+
+export interface TeamResponse {
+	team: Team
+	venue: Venue
+}

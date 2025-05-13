@@ -3,7 +3,7 @@ import { readFile } from 'node:fs/promises'
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { getSpainDate } from 'src/utils/date'
 
-import { FixtureResponse, SearchTeamResponse } from './types'
+import { FixtureResponse, SearchTeamResponse, TeamResponse } from './types'
 
 @Injectable()
 export default class FootballFetcherProvider {
@@ -31,6 +31,19 @@ export default class FootballFetcherProvider {
 		}
 	}
 
+	async getTeam(id: number) {
+		try {
+			const result = await this.fetch<TeamResponse>(this.teamsPath, [
+				`id=${id}`,
+			])
+
+			return result
+		} catch (error) {
+			this.logger.error('Error getting team', error)
+			throw new Error('Error getting team')
+		}
+	}
+
 	async getFixture(id: number) {
 		try {
 			const fixtures = await this.fetch<FixtureResponse[]>(
@@ -38,7 +51,7 @@ export default class FootballFetcherProvider {
 				[`id=${id}`, `timezone=${this.timezone}`],
 			)
 
-			return fixtures.map((fixture) => ({
+			const fixture = fixtures.map((fixture) => ({
 				...fixture.fixture,
 				league: fixture.league,
 				teams: fixture.teams,
@@ -47,6 +60,14 @@ export default class FootballFetcherProvider {
 					players: item.players.map((player) => player.player),
 				})),
 			}))[0]
+
+			const awayTeamId = fixture.teams.away.id
+			const rival = await this.getTeam(awayTeamId)
+
+			return {
+				...fixture,
+				rival,
+			}
 		} catch (error) {
 			this.logger.error('Error getting fixture', error)
 			throw new Error('Error getting fixture')
