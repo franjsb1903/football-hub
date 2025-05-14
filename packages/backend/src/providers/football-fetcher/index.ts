@@ -89,6 +89,13 @@ export default class FootballFetcherProvider {
 				],
 			)
 
+			fixtures.sort((a, b) => {
+				const dateA = new Date(a.fixture.date)
+				const dateB = new Date(b.fixture.date)
+
+				return dateA.getTime() - dateB.getTime()
+			})
+
 			return fixtures.map((fixture) => ({
 				...fixture.fixture,
 				league: fixture.league,

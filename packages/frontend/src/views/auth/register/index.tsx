@@ -51,7 +51,7 @@ export default function RegisterForm({
 								<Input
 									id="name"
 									type="text"
-									placeholder="Teimas"
+									placeholder="Nombre"
 									required
 									value={user.name}
 									onChange={onChangeUser}
