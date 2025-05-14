@@ -2,7 +2,7 @@
 // eslint-disable-next-line unicorn/import-style
 import { join } from 'node:path'
 
-import { Logger, Module } from '@nestjs/common'
+import { Logger, Module, MiddlewareConsumer } from '@nestjs/common'
 import { JwtModule } from '@nestjs/jwt'
 import { ConfigModule } from '@nestjs/config'
 
@@ -19,6 +19,7 @@ import {
 	TeamsController,
 } from './controllers'
 import FixturesController from './controllers/fixtures'
+import { LoggerMiddleware } from './logger'
 
 @Module({
 	imports: [
@@ -50,4 +51,8 @@ import FixturesController from './controllers/fixtures'
 		Logger,
 	],
 })
-export class AppModule {}
+export class AppModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer.apply(LoggerMiddleware).forRoutes('*') // Aplica a todas las rutas
+	}
+}
