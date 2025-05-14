@@ -9,6 +9,7 @@ import styles from './styles.module.css'
 import { Button } from '@/components/ui/button'
 import FixturesLayout from '@/layouts/fixtures-layout'
 import { Team } from '@/types'
+import Loading from '@/components/loading'
 
 export default function Fixtures() {
 	const { data, status } = useSession()
@@ -28,18 +29,20 @@ export default function Fixtures() {
 				Selecciona un equipo para ver sus próximos partidos
 			</h3>
 			{isLoading ? (
-				<p>Cargando...</p>
+				<Loading />
 			) : (
-				<TeamList
-					teams={favoriteTeams}
-					Action={({ team }) => (
-						<Button
-							onClick={() => redirect(`/fixtures/${team.id}`)}
-						>
-							Ver
-						</Button>
-					)}
-				/>
+				<>
+					<TeamList
+						teams={favoriteTeams}
+						Action={({ team }) => (
+							<Button
+								onClick={() => redirect(`/fixtures/${team.id}`)}
+							>
+								Ver
+							</Button>
+						)}
+					/>
+				</>
 			)}
 		</FixturesLayout>
 	)

@@ -9,6 +9,7 @@ import styles from './styles.module.css'
 import SearchInput from '@/components/search-input'
 import TeamList from './list'
 import { useFavoriteTeams, useSearch } from './hooks'
+import Loading from '@/components/loading'
 
 export default function Teams() {
 	const { data, status } = useSession()
@@ -76,10 +77,11 @@ export default function Teams() {
 					favoritos
 				</p>
 				<section className={styles.myTeamsContainer}>
-					{isLoading && <p>Cargando...</p>}
-					{favoriteTeams &&
-					favoriteTeams?.length > 0 &&
-					!isLoading ? (
+					{isLoading ? (
+						<Loading />
+					) : favoriteTeams &&
+					  favoriteTeams?.length > 0 &&
+					  !isLoading ? (
 						<TeamList
 							teams={favoriteTeams}
 							Action={({ team }) =>
@@ -100,7 +102,7 @@ export default function Teams() {
 								)
 							}
 						/>
-					) : isLoading ? undefined : (
+					) : (
 						<p className={styles.empty}>
 							Todavía no tienes equipos. Emplea el buscador de tu
 							izquierda para comenzar

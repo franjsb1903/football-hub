@@ -3,7 +3,6 @@ import { useSession } from 'next-auth/react'
 import { redirect } from 'next/navigation'
 
 import FixturesLayout from '@/layouts/fixtures-layout'
-import useFetchFixtures from './hooks/use-fetch-team-fixtures'
 
 import commonStyles from '../styles.module.css'
 import styles from './styles.module.css'
@@ -15,6 +14,9 @@ import {
 } from '@/components/ui/card'
 import Image from '@/components/image'
 import { formatISODateToDDMMYYYY_HHmm } from '@/utils/date'
+import { useFetchData } from '@/hooks'
+import Loading from '@/components/loading'
+import { Fixture } from '@/types'
 
 interface ComingMatchesProperties {
 	team: number
@@ -23,10 +25,17 @@ interface ComingMatchesProperties {
 export default function ComingMatches({ team }: ComingMatchesProperties) {
 	const { data, status } = useSession()
 
-	const { fixtures } = useFetchFixtures(team, data?.accessToken)
+	const { data: fixtures, isLoading } = useFetchData<Fixture[]>(
+		`request/fixtures/team/${team}`,
+		data?.accessToken,
+	)
 
 	if (status === 'unauthenticated') {
 		return redirect('/login')
+	}
+
+	if (isLoading) {
+		return <Loading />
 	}
 
 	return (

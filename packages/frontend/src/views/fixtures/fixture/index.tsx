@@ -7,6 +7,7 @@ import Players from './playes'
 import Info from './info'
 import { Fixture } from '@/types'
 import RivalInfo from './rival'
+import Loading from '@/components/loading'
 
 interface FixtureProperties {
 	id: number
@@ -14,13 +15,17 @@ interface FixtureProperties {
 
 export default function FixtureView({ id }: FixtureProperties) {
 	const { data, status } = useSession()
-	const { data: fixture } = useFetchData<Fixture>(
+	const { data: fixture, isLoading } = useFetchData<Fixture>(
 		`request/fixtures/${id}`,
 		data?.accessToken,
 	)
 
 	if (status === 'unauthenticated') {
 		return redirect('/login')
+	}
+
+	if (isLoading) {
+		return <Loading />
 	}
 
 	return (
