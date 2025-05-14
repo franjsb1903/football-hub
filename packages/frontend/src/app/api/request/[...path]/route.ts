@@ -2,10 +2,7 @@ import { NextRequest, NextResponse } from 'next/server'
 
 import api from '@/services/api'
 
-export async function GET(
-	request: NextRequest,
-	{ params }: { params: { path: string | string[] } },
-) {
+export async function GET(request: NextRequest, { params }: any) {
 	const token = request.headers.get('Authorization')?.split(' ')[1]
 	const { path } = await params
 
@@ -29,10 +26,7 @@ export async function GET(
 	}
 }
 
-export async function POST(
-	request: NextRequest,
-	{ params }: { params: { path: string | string[] } },
-) {
+export async function POST(request: NextRequest, { params }: any) {
 	const body = await request.json()
 	const token = request.headers.get('Authorization')?.split(' ')[1]
 	const { path } = await params
@@ -57,10 +51,7 @@ export async function POST(
 	}
 }
 
-export async function DELETE(
-	request: NextRequest,
-	{ params }: { params: { path: string | string[] } },
-) {
+export async function DELETE(request: NextRequest, { params }: any) {
 	const token = request.headers.get('Authorization')?.split(' ')[1]
 	const { path } = await params
 
