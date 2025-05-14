@@ -1,5 +1,7 @@
 'use client'
 import type React from 'react'
+import { useSession } from 'next-auth/react'
+import { redirect } from 'next/navigation'
 
 import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -19,6 +21,7 @@ export default function LoginForm({
 	className,
 	...properties
 }: React.ComponentPropsWithoutRef<'div'>) {
+	const { data, status } = useSession()
 	const {
 		email,
 		password,
@@ -26,6 +29,10 @@ export default function LoginForm({
 		onChangeEmail,
 		onChangePassword,
 	} = useLogin()
+
+	if (data?.accessToken || status === 'authenticated') {
+		return redirect('/teams')
+	}
 
 	return (
 		<div className={cn(styles.container, className)} {...properties}>
