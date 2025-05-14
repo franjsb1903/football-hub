@@ -26,6 +26,26 @@ services:
         env_file:
             - .env
             - packages/frontend/.env
+        environment:
+            BACKEND_API_HOST: http://backend:3000
+        depends_on:
+            - backend
+
+    backend:
+        container_name: football-hub-backend
+        build:
+            context: .
+            dockerfile: Dockerfile.backend
+            target: runner
+        ports:
+            - '3000:3000'
+        restart: unless-stopped
+        env_file:
+            - .env
+            - packages/backend/.env
+        environment:
+            CORS_ORIGINS: "http://frontend:4321"
+            DATABASE_URL: "postgresql://${DB_USER}:${DB_PASSWORD}@db:${DB_PORT}/${DB_NAME}"
         depends_on:
             - db
 

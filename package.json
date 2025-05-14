@@ -7,10 +7,11 @@
 		"lint": "eslint --fix .",
 		"format": "prettier --write .",
 		"prepare": "husky",
-		"dev:backend": "npm run start:dev --workspace packages/backend",
-		"dev:frontend": "npm run dev --workspace packages/frontend",
 		"build:frontend": "npm run build --workspace packages/frontend",
 		"start:frontend": "npm start --workspace packages/frontend",
+		"dev:backend": "npm run start:dev --workspace packages/backend",
+		"build:backend": "npm run build --workspace packages/backend",
+		"start:backend": "npm run start:prod --workspace packages/backend",
 		"prisma:migrate": "prisma migrate dev --schema=packages/backend/prisma/schema.prisma",
 		"prisma:generate": "prisma generate --schema=packages/backend/prisma/schema.prisma"
 	},
