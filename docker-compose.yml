@@ -14,5 +14,20 @@ services:
         ports:
             - '5432:5432'
 
+    frontend:
+        container_name: football-hub-frontend
+        build:
+            context: .
+            dockerfile: Dockerfile.frontend
+            target: runner
+        ports:
+            - '4321:4321'
+        restart: unless-stopped
+        env_file:
+            - .env
+            - packages/frontend/.env
+        depends_on:
+            - db
+
 volumes:
     postgres:
