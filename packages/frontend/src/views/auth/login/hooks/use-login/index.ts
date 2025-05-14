@@ -1,3 +1,4 @@
+'use client'
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { FormEventHandler, useState } from 'react'
@@ -41,6 +42,7 @@ export function useLogin() {
 	return {
 		email,
 		password,
+		router,
 		onChangeEmail,
 		onChangePassword,
 		handleCredentialsSignIn,
