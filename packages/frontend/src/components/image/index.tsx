@@ -10,7 +10,7 @@ export default function Image({ src, name, additionalClass }: ImageProperties) {
 	return (
 		<div className={`relative ${additionalClass ?? 'w-[20%]'}`}>
 			<NextImage
-				src={src || '/placeholder-logo.png'}
+				src={src || '/placeholder.png'}
 				alt={`Logo de ${name}`}
 				fill
 				className="object-contain"
