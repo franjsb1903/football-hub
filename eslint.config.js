@@ -14,7 +14,7 @@ export default [
 	},
 	{
 		files: ['packages/**/*.{js,ts,jsx,tsx}', '*.{js,ts,jsx,tsx}'],
-		ignores: ['eslint.config.js', '**/utils.ts'],
+		ignores: ['*.config.js', '**/utils.ts'],
 		languageOptions: {
 			parser: tseslint.parser,
 			parserOptions: {
@@ -65,6 +65,14 @@ export default [
 		settings: {
 			react: {
 				version: 'detect',
+			},
+		},
+	},
+	{
+		files: ['**/specs.ts'],
+		languageOptions: {
+			globals: {
+				...globals.jest,
 			},
 		},
 	},
