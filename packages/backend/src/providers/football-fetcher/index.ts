@@ -8,7 +8,6 @@ export default class FootballFetcherProvider {
 	@Inject()
 	logger: Logger
 
-	private isMocked = process.env.IS_MOCKED === 'true'
 	private baseUrl = process.env.API_FOOTBALL_URL || ''
 	private teamsPath = process.env.TEAMS_PATH || 'teams'
 	private fixturesPath = process.env.FIXTURES_PATH || 'fixtures'
