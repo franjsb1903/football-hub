@@ -9,6 +9,7 @@ import { AuthGuard } from '../../guards'
 describe('FavoriteTeamController', () => {
 	let favoriteTeamController: FavoriteTeamController
 	let favoriteTeamProvider: FavoriteTeamProvider
+	let logger: Logger
 
 	const mockAuthGuard = { canActivate: jest.fn(() => true) }
 
@@ -45,6 +46,7 @@ describe('FavoriteTeamController', () => {
 		)
 		favoriteTeamProvider =
 			module.get<FavoriteTeamProvider>(FavoriteTeamProvider)
+		logger = module.get<Logger>(Logger)
 	})
 
 	it('should be defined', () => {
@@ -111,8 +113,8 @@ describe('FavoriteTeamController', () => {
 				await favoriteTeamController.getAll(mockRequest)
 
 				expect(1).toBe(0)
-			} catch (error) {
-				expect(error).toBeDefined()
+			} catch {
+				expect(logger.error).toHaveBeenCalled()
 			}
 		})
 	})
@@ -131,7 +133,7 @@ describe('FavoriteTeamController', () => {
 			const expectedResult = { userId: userId, teamId: teamData.id }
 			;(
 				favoriteTeamProvider.saveFavoriteTeam as jest.Mock
-			).mockResolvedValue(expectedResult)
+			).mockResolvedValueOnce(expectedResult)
 
 			const result = await favoriteTeamController.saveFavoriteTeam(
 				teamData,
@@ -147,7 +149,6 @@ describe('FavoriteTeamController', () => {
 
 		it('should log an error if an exception occurs', async () => {
 			const error = new Error('Something went wrong')
-
 			try {
 				const userId = 1
 				const mockRequest = { user: { id: userId } }
@@ -158,9 +159,10 @@ describe('FavoriteTeamController', () => {
 					logo: 'logo3.png',
 					name: 'Chelsea',
 				}
+
 				;(
 					favoriteTeamProvider.saveFavoriteTeam as jest.Mock
-				).mockRejectedValue(error)
+				).mockRejectedValueOnce(error)
 
 				await favoriteTeamController.saveFavoriteTeam(
 					teamData,
@@ -168,8 +170,8 @@ describe('FavoriteTeamController', () => {
 				)
 
 				expect(1).toBe(0)
-			} catch (error) {
-				expect(error).toBeDefined()
+			} catch {
+				expect(logger.error).toHaveBeenCalled()
 			}
 		})
 	})
@@ -212,8 +214,8 @@ describe('FavoriteTeamController', () => {
 				)
 
 				expect(1).toBe(0)
-			} catch (error) {
-				expect(error).toBeDefined()
+			} catch {
+				expect(logger.error).toHaveBeenCalled()
 			}
 		})
 	})

@@ -50,7 +50,11 @@ export default class FavoriteTeamController {
 			const user = request.user
 			const userId = user.id
 
-			return this.favoriteTeamProvider.saveFavoriteTeam(userId, team)
+			const result = await this.favoriteTeamProvider.saveFavoriteTeam(
+				userId,
+				team,
+			)
+			return result
 		} catch (error) {
 			this.logger.error('Error saving favorite team', error)
 		}
@@ -62,10 +66,11 @@ export default class FavoriteTeamController {
 			const user = request.user
 			const userId = user.id
 
-			return this.favoriteTeamProvider.deleteFavoriteTeam(
+			const result = await this.favoriteTeamProvider.deleteFavoriteTeam(
 				userId,
 				Number.parseInt(teamId),
 			)
+			return result
 		} catch (error) {
 			this.logger.error('Error deleting favorite team', error)
 		}
