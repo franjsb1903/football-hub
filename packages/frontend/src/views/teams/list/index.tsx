@@ -1,7 +1,7 @@
 import React from 'react'
 
 import { Team } from '@/types'
-import styles from './styles.module.css'
+import styles from '../styles.module.css'
 import {
 	Card,
 	CardDescription,
