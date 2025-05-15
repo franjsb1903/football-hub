@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { toast } from 'react-toastify'
 
 import { Team } from '@/types'
 import request from '@/services/request'
@@ -25,7 +26,9 @@ export default function useFavoriteTeams(token?: string) {
 
 	const addAsFavorite = async (team: Team) => {
 		if (favoriteTeams?.length && favoriteTeams?.length >= 5) {
-			alert('Ya has seleccionado todos los equipos')
+			toast('Ya has seleccionado todos los equipos', {
+				type: 'warning',
+			})
 			return
 		}
 
@@ -39,8 +42,16 @@ export default function useFavoriteTeams(token?: string) {
 				...(previousState || []),
 				team,
 			])
+			toast('Equipo añadido como favorito', {
+				type: 'success',
+			})
 		} catch {
-			alert('Ha ocurrido un problema al guardar tu equipo como favorito')
+			toast(
+				'Ha ocurrido un problema al guardar tu equipo como favorito',
+				{
+					type: 'error',
+				},
+			)
 		}
 	}
 
@@ -55,8 +66,13 @@ export default function useFavoriteTeams(token?: string) {
 				(previousState) =>
 					previousState?.filter(({ id }) => id !== teamId) ?? [],
 			)
+			toast('Equipo eliminado como favorito', {
+				type: 'success',
+			})
 		} catch {
-			alert('Ha ocurrido un problema al quitar tu equipo como favorito')
+			toast('Ha ocurrido un problema al quitar tu equipo como favorito', {
+				type: 'error',
+			})
 		}
 	}
 

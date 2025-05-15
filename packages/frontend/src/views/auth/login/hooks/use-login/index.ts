@@ -2,6 +2,7 @@
 import { signIn } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import React, { FormEventHandler, useState } from 'react'
+import { toast } from 'react-toastify'
 
 export function useLogin() {
 	const [email, setEmail] = useState('')
@@ -24,10 +25,14 @@ export function useLogin() {
 			if (response && response.ok) {
 				router.push('/teams')
 			} else {
-				alert('No se ha podido iniciar sesión')
+				toast('No se ha podido iniciar sesión', {
+					type: 'error',
+				})
 			}
 		} catch {
-			alert('No se ha podido iniciar sesión')
+			toast('No se ha podido iniciar sesión', {
+				type: 'error',
+			})
 		}
 	}
 

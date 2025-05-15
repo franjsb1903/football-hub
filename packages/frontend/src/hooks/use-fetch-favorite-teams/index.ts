@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import { Team } from '@/types'
 import request from '@/services/request'
@@ -21,7 +22,9 @@ export default function useFetchFavoriteTeams(token?: string) {
 					setIsLoading(false)
 				})
 				.catch(() => {
-					alert('No se han podido obtener tus equipos favoritos')
+					toast('No se han podido obtener tus equipos favoritos', {
+						type: 'error',
+					})
 				})
 		}
 	}, [token])

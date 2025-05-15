@@ -1,6 +1,7 @@
 'use client'
 import React, { FormEventHandler, useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { toast } from 'react-toastify'
 
 import { validateEmail, validatePassword } from '@/utils/user'
 import request from '@/services/request'
@@ -28,30 +29,41 @@ export function useRegister() {
 
 		const emailValidation = validateEmail(user.email)
 		if (!emailValidation.valid) {
-			return alert(emailValidation.message)
+			return toast(emailValidation.message, { type: 'warning' })
 		}
 
 		const passwordValidation = validatePassword(user.password)
 		if (!passwordValidation.valid) {
-			return alert(passwordValidation.message)
+			return toast(passwordValidation.message, {
+				type: 'warning',
+			})
 		}
 
 		if (user.password !== user.repeatPassword) {
-			return alert('Las contraseñas no coinciden')
+			return toast('Las contraseñas no coinciden', {
+				type: 'warning',
+			})
 		}
 
 		try {
 			await request.post('request/auth/register', user)
-			alert(
+			toast(
 				'¡Registro completado con éxito! Ya puedes entrar en Football Hub',
+				{
+					type: 'success',
+				},
 			)
 			router.push('/login')
 		} catch (error: any) {
 			console.log({ error: error.message })
 			if (error && error.message && error.message === 'Conflict') {
-				return alert('Ya existe un usuario con ese email')
+				return toast('Ya existe un usuario con ese email', {
+					type: 'error',
+				})
 			}
-			alert('Ha ocurrido un error en el registro, vuelve a intentarlo')
+			toast('Ha ocurrido un error en el registro, vuelve a intentarlo', {
+				type: 'error',
+			})
 		}
 	}
 

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { toast } from 'react-toastify'
 
 import request from '@/services/request'
 
@@ -20,7 +21,9 @@ export default function useFetchData<T>(path: string, token?: string) {
 					setIsLoading(false)
 				})
 				.catch(() => {
-					alert('No se han podido obtener tus equipos favoritos')
+					toast('No se han podido obtener tus equipos favoritos', {
+						type: 'error',
+					})
 				})
 		}
 	}, [path, token])
