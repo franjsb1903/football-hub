@@ -21,7 +21,8 @@ export default class FixturesController {
 	@Get('/:id')
 	async getFixture(@Param('id') id: number) {
 		try {
-			return this.footballFetcher.getFixture(id)
+			const fixture = await this.footballFetcher.getFixture(id)
+			return fixture
 		} catch (error) {
 			this.logger.error(`Error getting fixture ${id}`, error)
 			throw new InternalServerErrorException(
@@ -33,7 +34,8 @@ export default class FixturesController {
 	@Get('/team/:id')
 	async getNextTeamFixtures(@Param('id') teamId: number) {
 		try {
-			return this.footballFetcher.getFixturesByTeam(teamId)
+			const fixture = await this.footballFetcher.getFixturesByTeam(teamId)
+			return fixture
 		} catch (error) {
 			this.logger.error(`Error getting fixtures of team ${teamId}`, error)
 			throw new InternalServerErrorException(
