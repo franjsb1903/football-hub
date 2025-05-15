@@ -24,10 +24,16 @@ export function useLogin() {
 
 			if (response && response.ok) {
 				router.push('/teams')
-			} else {
-				toast('No se ha podido iniciar sesión', {
+			} else if (response?.status === 401) {
+				toast('Credenciales incorrectas', {
 					type: 'error',
 				})
+			} else {
+				{
+					toast('No se ha podido iniciar sesión', {
+						type: 'error',
+					})
+				}
 			}
 		} catch {
 			toast('No se ha podido iniciar sesión', {
