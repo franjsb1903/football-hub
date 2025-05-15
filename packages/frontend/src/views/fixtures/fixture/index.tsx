@@ -8,6 +8,7 @@ import Info from './info'
 import { Fixture } from '@/types'
 import RivalInfo from './rival'
 import Loading from '@/components/loading'
+import { Button } from '@/components/ui/button'
 
 interface FixtureProperties {
 	id: number
@@ -32,6 +33,11 @@ export default function FixtureView({ id }: FixtureProperties) {
 
 	return (
 		<FixturesLayout>
+			<section>
+				<Button size="sm" onClick={() => router.back()}>
+					Volver
+				</Button>
+			</section>
 			<Info fixture={fixture} />
 			<RivalInfo rival={fixture?.rival} />
 			<Players fixture={fixture} />
