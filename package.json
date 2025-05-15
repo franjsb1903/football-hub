@@ -13,7 +13,9 @@
 		"build:backend": "npm run build --workspace packages/backend",
 		"start:backend": "npm run start:prod --workspace packages/backend",
 		"prisma:migrate": "prisma migrate dev --schema=packages/backend/prisma/schema.prisma",
-		"prisma:generate": "prisma generate --schema=packages/backend/prisma/schema.prisma"
+		"prisma:generate": "prisma generate --schema=packages/backend/prisma/schema.prisma",
+		"coverage:backend": "npm run test:cov --workspace packages/backend",
+		"test:backend": "npm run test --workspace packages/backend"
 	},
 	"repository": {
 		"type": "git",
