@@ -148,11 +148,20 @@ El MER (Modelo Entidad-Relación) es el siguiente:
 Existen dos entidades:
 
 - `user`: Almacenamiento de los datos de usuarios:
-    - `id` como PK (Primary Key) autogenerada.
+    - `id`: PK (Primary Key) autogenerada.
+    - `name`: nombre del usuario.
+    - `email`: email del usuario.
+    - `password`: hash de la contraseña de usuario.
+    - `createdAt`: fecha de creación del usuario.
 - `favorite_team`: Almacenamiento de equipos favoritos e información de dichos equipos.
     - `id_user` (id del usuario) e `id_team` (id del equipo) como PK.
-    - `id_user` como FK (Foreign Key) para relación con el usuario.
-    - `id_team` es el mismo que viene al obtener el equipo desde la API, por lo que no es autogenerado.
+    - `id_user`: FK (Foreign Key) para relación con el usuario por id.
+    - `id_team`: id del equipo. Es el mismo que viene al obtener el equipo desde la API, por lo que no es autogenerado.
+    - `name`: nombre del equipo.
+    - `code`: código del equipo.
+    - `teamLogo`: logo del equipo.
+    - `country`: país del equipo.
+    - `createdAt`: fecha de creación.
 
 Existe, a su vez, una relación entre ambas entidades de tipo uno a cinco, donde un usuario puede tener hasta 5 equipos favoritos.
 
