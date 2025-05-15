@@ -133,10 +133,6 @@ El proyecto cuenta con las siguientes tecnologías y librerías.
 
 ## Arquitectura
 
-### Diagrama de arquitectura
-
-![alt text](diagrams/arquitectura.png)
-
 ### MER
 
 El MER (Modelo Entidad-Relación) es el siguiente:
@@ -153,6 +149,10 @@ Existen dos entidades:
     - `id_team` es el mismo que viene al obtener el equipo desde la API, por lo que no es autogenerado.
 
 Existe, a su vez, una relación entre ambas entidades de tipo uno a cinco, donde un usuario puede tener hasta 5 equipos favoritos.
+
+### Diagrama de arquitectura
+
+![alt text](diagrams/arquitectura.png)
 
 ### Backend
 
