@@ -51,8 +51,33 @@ describe('FootballFetcherProvider', () => {
 			expect(mockFetch).toHaveBeenCalled()
 		})
 
+		it('should fetch and return teams without response body', async () => {
+			const mockTeams = [{ team: { id: 1, name: 'Team A' } }]
+			mockFetch.mockResolvedValueOnce({
+				ok: true,
+				json: async () => mockTeams,
+			})
+
+			const result = await provider.searchTeams('Team A')
+			expect(result).toEqual([{ id: 1, name: 'Team A' }])
+			expect(mockFetch).toHaveBeenCalled()
+		})
+
 		it('should log and throw on error', async () => {
 			mockFetch.mockRejectedValueOnce(new Error('fail'))
+			await expect(provider.searchTeams('Team A')).rejects.toThrow(
+				'Error searching for teams',
+			)
+			expect(mockLogger.error).toHaveBeenCalledWith(
+				'Error searching for teams',
+				expect.any(Error),
+			)
+		})
+
+		it('should log and throw on response not ok', async () => {
+			mockFetch.mockResolvedValueOnce({
+				ok: false,
+			})
 			await expect(provider.searchTeams('Team A')).rejects.toThrow(
 				'Error searching for teams',
 			)
