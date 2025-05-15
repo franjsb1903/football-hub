@@ -185,7 +185,7 @@ Cada workspace sigue una serie de pautas organizativas. De manera común, se apl
 
 - `controllers`: controladores, punto de entrada del servicio que gestionan las peticiones en función de método y ruta.
 - `providers`: servicios, proveen de funcionalidades a los controladores o a otros servicios.
-- `repository`: aportan funciones para extraer la comunicación con la base de datos asociada a una tabla o entidad concreta. Seguiría en este caso el patrón de diseño [Repository](https://medium.com/@pererikbergman/repository-design-pattern-e28c0f3e4a30).
+- `repositories`: aportan funciones para extraer la comunicación con la base de datos asociada a una tabla o entidad concreta. Seguiría en este caso el patrón de diseño [Repository](https://medium.com/@pererikbergman/repository-design-pattern-e28c0f3e4a30).
 - `guards`: proveen de funcionalidad común para controlar el acceso a determinadas rutas.
 
 ### Frontend
