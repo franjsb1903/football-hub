@@ -129,7 +129,7 @@ El proyecto cuenta con las siguientes tecnologías y librerías.
 - [NestJS](https://docs.nestjs.com/): framework para creación de servicios (v11).
 - [Prisma](https://www.prisma.io/): ORM para comunicación con base de datos y gestión de migraciones (v6).
 - [Jest](https://jestjs.io/): liberaría para la ejecución de test unitarios.
-- [JWT](https://jwt.io/): libererías y concepto general y estandarizado para la creación de tokens de acceso para los usuarios.
+- [JWT](https://jwt.io/): librería y concepto general y estandarizado para la creación de tokens de acceso para los usuarios.
 - [Bcrypt](https://www.npmjs.com/package/bcrypt): paquete para la creación de hash de contraseñas.
 
 ### Herramientas externas
@@ -172,7 +172,7 @@ Existe, a su vez, una relación entre ambas entidades de tipo uno a cinco, donde
 ### Backend
 
 - El servicio se comunica con la BBDD relacional a través de uso de Prisma.
-- El servicio se integra con una API externa ([API Football](https://www.api-football.com/documentation-v3#section/Introduction)) para obtención de nombres de equipos, actuando en este caso como un proxy, formateando la respuesta y adaptándola al contrato con el front.
+- El servicio se integra con una API externa ([API Football](https://www.api-football.com/documentation-v3#section/Introduction)) para obtención de nombres de equipos, actuando en este caso como algo parecido a un proxy, formateando la respuesta y adaptándola al contrato con el front.
 - Expone una serie de endpoints en función del tipo de información o acción a realizar:
     - `auth`: gestión de la autenticación.
     - `favorite`: equipos favoritos.
@@ -210,7 +210,7 @@ En este caso, se aplica el patrón de diseño [Atomic Design](https://medium.com
 - `pages`: son las páginas, los elementos en el nivel más alto del sistema. En este caso, sería la carpeta `app`, debido al uso de `NextJS`.
 - `layouts`: plantillas comunes que envuelven una vista.
 - `views`: vistas que componen las páginas.
-- `componentes`: elementos mínimos que pueden ser reutilizados en diferentes vistas.
+- `components`: elementos mínimos que pueden ser reutilizados en diferentes vistas.
 
 A su vez, existen:
 
