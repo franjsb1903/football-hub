@@ -1,5 +1,3 @@
-import { readFile } from 'node:fs/promises'
-
 import { Inject, Injectable, Logger } from '@nestjs/common'
 import { getSpainDate } from 'src/utils/date'
 
@@ -108,10 +106,6 @@ export default class FootballFetcherProvider {
 	}
 
 	private async fetch<T>(path: string, parameters: string[]): Promise<T> {
-		if (this.isMocked) {
-			return this.fetchMock<T>(path)
-		}
-
 		const url = new URL(`${this.baseUrl}/${path}`)
 		if (parameters.length > 0) {
 			url.search = parameters.join('&')
@@ -136,17 +130,5 @@ export default class FootballFetcherProvider {
 		}
 
 		return data
-	}
-
-	private async fetchMock<T>(path: string): Promise<T> {
-		const filePath = `${process.cwd()}/mocks/${path}.json`
-		this.logger.log(`Fetching mock data from ${filePath}`)
-		const data = await readFile(filePath, 'utf8')
-		const result = JSON.parse(data)
-
-		if (result?.response) {
-			return result.response as T
-		}
-		return result
 	}
 }
