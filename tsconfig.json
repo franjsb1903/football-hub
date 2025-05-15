@@ -2,8 +2,15 @@
 	"compilerOptions": {
 		"target": "ES2020",
 		"useDefineForClassFields": true,
-		"types": ["node", "jest"],
-		"lib": ["ES2020", "DOM", "DOM.Iterable"],
+		"types": [
+			"node",
+			"jest"
+		],
+		"lib": [
+			"ES2020",
+			"DOM",
+			"DOM.Iterable"
+		],
 		"module": "ESNext",
 		"skipLibCheck": true,
 		"declaration": true,
@@ -23,12 +30,22 @@
 		/* Paths */
 		"baseUrl": ".",
 		"paths": {
-			"frontend/*": ["packages/frontend/src/*"],
-			"backend/*": ["packages/backend/src/*"]
+			"frontend/*": [
+				"packages/frontend/src/*"
+			],
+			"backend/*": [
+				"packages/backend/src/*"
+			]
 		}
 	},
-	"include": ["**/*.ts", "**/*.tsx"],
-	"exclude": ["node_modules"],
+	"include": [
+		"**/*.ts",
+		"**/*.tsx",
+		"packages/frontend/next.config.js"
+	],
+	"exclude": [
+		"node_modules"
+	],
 	"references": [
 		{
 			"path": "./tsconfig.node.json"

@@ -9,6 +9,7 @@
 		"prepare": "husky",
 		"build:frontend": "npm run build --workspace packages/frontend",
 		"start:frontend": "npm start --workspace packages/frontend",
+		"dev:frontend": "npm run dev --workspace packages/frontend",
 		"dev:backend": "npm run start:dev --workspace packages/backend",
 		"build:backend": "npm run build --workspace packages/backend",
 		"start:backend": "npm run start:prod --workspace packages/backend",
