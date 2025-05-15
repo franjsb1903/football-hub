@@ -63,7 +63,15 @@ El cliente de prisma debería haberse ejecutado automáticamente. En caso de que
 npm run prisma:generate
 ```
 
-### 4.a Levantar los servicios en local (modo desarrollo)
+### 4.a Levantar los servicios en local (modo producción) (RECOMENDADO)
+
+Para levantar la plataforma en modo producción, se recomienda el uso de `docker`. Para ello, ejecutar lo siguiente en la raíz del proyecto:
+
+```bash
+docker-compose up -d --build
+```
+
+### 4.b Levantar los servicios en local (modo desarrollo)
 
 Para levantar los servicios (frontend y backend) en modo desarrollo, se debe de ejecutar lo siguiente de manera secuencial en la raíz del proyecto:
 
@@ -73,14 +81,6 @@ npm run dev:backend
 
 ```bash
 npm run dev:frontend
-```
-
-### 4.b Levantar los servicios en local (modo producción) (RECOMENDADO)
-
-Para levantar la plataforma en modo producción, se recomienda el uso de `docker`. Para ello, ejecutar lo siguiente en la raíz del proyecto:
-
-```bash
-docker-compose up -d --build
 ```
 
 ### 5. Acceso a la plataforma
