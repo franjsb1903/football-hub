@@ -45,21 +45,27 @@ npm install
 
 ### 3. Base de datos
 
-Levanta la base de datos ejecutando lo siguiente:
+Levantar la base de datos ejecutando lo siguiente en la raíz del proyecto:
 
 ```bash
 docker-compose up -d db
 ```
 
-A continuación, vuelca las migraciones:
+A continuación, volcar las migraciones:
 
-```
+```bash
 npm run prisma:migrate
+```
+
+El cliente de prisma debería haberse ejecutado automáticamente. En caso de que no sea así, ejecutar:
+
+```bash
+npm run prisma:generate
 ```
 
 ### 4.a Levantar los servicios en local (modo desarrollo)
 
-Para levantar los servicios (frontend y backend) en modo desarrollo, ejecuta lo siguiente de manera secuencial en la raíz del proyecto:
+Para levantar los servicios (frontend y backend) en modo desarrollo, se debe de ejecutar lo siguiente de manera secuencial en la raíz del proyecto:
 
 ```bash
 npm run dev:backend
