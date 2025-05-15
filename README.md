@@ -119,8 +119,8 @@ El proyecto cuenta con las siguientes tecnologías y librerías.
 
 ### Frontend
 
-- [NextJS](https://nextjs.org/): framework de React (v15).
-- [React](https://es.react.dev/): librería para construcción de sitios web (v19).
+- [NextJS](https://nextjs.org/): framework de React (v14).
+- [React](https://es.react.dev/): librería para construcción de sitios web (v18).
 - [shadcn/ui](https://ui.shadcn.com/): librería de UI que provee de componentes ya construidos.
 - [TailwindCSS](https://tailwindcss.com/): framework CSS (v3).
 
