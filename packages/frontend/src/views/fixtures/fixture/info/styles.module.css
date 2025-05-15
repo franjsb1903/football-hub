@@ -1,0 +1,30 @@
+.cardTitle {
+	@apply flex flex-row gap-4 justify-center items-center;
+}
+
+.teamNameLeft {
+	@apply text-xs md:text-base;
+	@apply flex-1 text-right pr-4;
+	@apply md:truncate;
+}
+
+.teamNameRight {
+	@apply text-xs md:text-base;
+	@apply flex-1 text-left pl-4;
+	@apply md:truncate;
+}
+
+.content {
+	@apply border-t-[1px] border-gray-300 p-8;
+	@apply flex flex-col justify-start;
+	@apply xl:flex-row xl:justify-between xl:items-center;
+
+	& span {
+		@apply text-sm text-gray-400;
+		@apply flex items-center gap-1;
+	}
+
+	& svg {
+		@apply text-gray-700;
+	}
+}

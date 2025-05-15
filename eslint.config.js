@@ -14,7 +14,7 @@ export default [
 	},
 	{
 		files: ['packages/**/*.{js,ts,jsx,tsx}', '*.{js,ts,jsx,tsx}'],
-		ignores: ['eslint.config.js'],
+		ignores: ['*.config.js', '**/utils.ts'],
 		languageOptions: {
 			parser: tseslint.parser,
 			parserOptions: {
@@ -55,12 +55,6 @@ export default [
 					'newlines-between': 'always',
 				},
 			],
-			'@typescript-eslint/consistent-type-imports': [
-				'error',
-				{
-					prefer: 'type-imports',
-				},
-			],
 			'import/no-anonymous-default-export': [
 				'error',
 				{
@@ -70,8 +64,46 @@ export default [
 		},
 		settings: {
 			react: {
-				version: 'detect', // Detecta automáticamente la versión de React
+				version: 'detect',
 			},
+		},
+	},
+	{
+		files: ['**/specs.ts'],
+		languageOptions: {
+			globals: {
+				...globals.jest,
+			},
+		},
+	},
+	{
+		files: [
+			'**/postcss.config.js',
+			'**/next.config.js',
+			'**/tailwind.config.js',
+		],
+		languageOptions: {
+			parser: tseslint.parser,
+			parserOptions: {
+				project: null,
+				sourceType: 'module',
+				ecmaVersion: 'latest',
+			},
+			globals: {
+				...globals.node,
+			},
+		},
+		plugins: {},
+		rules: {
+			'@typescript-eslint/no-var-requires': 'off',
+			'@typescript-eslint/explicit-module-boundary-types': 'off',
+			'@typescript-eslint/no-unsafe-assignment': 'off',
+			'@typescript-eslint/no-unsafe-member-access': 'off',
+			'@typescript-eslint/no-unsafe-call': 'off',
+			'@typescript-eslint/no-unsafe-return': 'off',
+			'@typescript-eslint/restrict-template-expressions': 'off',
+			'unicorn/prefer-module': 'off',
+			'@typescript-eslint/no-require-imports': 'off',
 		},
 	},
 	pluginPrettier,

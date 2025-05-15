@@ -1,0 +1,37 @@
+.section {
+	@apply w-full md:w-[50%];
+	@apply flex flex-col gap-2;
+}
+
+.card {
+	@apply cursor-pointer;
+}
+
+.cardHeader {
+	@apply flex flex-row gap-2 p-2;
+}
+
+.cardTitle {
+	@apply flex flex-row gap-4 justify-center items-center;
+}
+
+.content {
+	@apply flex flex-col w-full gap-2;
+}
+
+.list {
+	@apply overflow-y-auto;
+	@apply flex flex-col gap-4;
+}
+
+.teamNameLeft {
+	@apply text-xs md:text-base;
+	@apply flex-1 text-right pr-4;
+	@apply truncate;
+}
+
+.teamNameRight {
+	@apply text-xs md:text-base;
+	@apply flex-1 text-left pl-4;
+	@apply truncate;
+}

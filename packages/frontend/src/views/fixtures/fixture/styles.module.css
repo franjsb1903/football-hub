@@ -1,0 +1,3 @@
+.cardTitle {
+	@apply text-lg md:text-2xl;
+}

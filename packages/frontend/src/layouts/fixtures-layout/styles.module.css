@@ -1,0 +1,4 @@
+.container {
+	@apply mx-4 md:mx-48 lg:mx-72 2xl:mx-[700px] mb-10;
+	@apply flex flex-col gap-6;
+}

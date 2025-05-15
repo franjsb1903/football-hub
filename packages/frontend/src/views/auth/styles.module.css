@@ -1,0 +1,31 @@
+.container {
+	@apply flex flex-col gap-6 items-center;
+}
+
+.card {
+	@apply mt-10 w-[90%] md:w-[60%] lg:w-[50%];
+}
+
+.form {
+	@apply flex flex-col gap-6;
+}
+
+.field {
+	@apply grid gap-2;
+}
+
+.title {
+	@apply text-lg md:text-2xl;
+}
+
+.register {
+	@apply mt-4 text-center text-sm;
+
+	& a {
+		@apply underline underline-offset-4;
+	}
+}
+
+.button {
+	@apply w-full;
+}

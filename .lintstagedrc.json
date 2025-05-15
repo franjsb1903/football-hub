@@ -1,0 +1,9 @@
+{
+	"*.{css,scss}": [
+		"npx prettier --write --ignore-unknown"
+	],
+	"*.{js,jsx,ts,tsx}": [
+		"npx prettier --write --ignore-unknown",
+		"npx eslint --fix"
+	]
+}

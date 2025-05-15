@@ -1,0 +1,20 @@
+{
+	// Configuración específica para Tailwind CSS IntelliSense
+	"tailwindCSS.experimental.configFile": "./tailwind.config.js",
+	// Asegúrate de que las sugerencias rápidas estén activadas para las cadenas de texto
+	"editor.quickSuggestions": {
+		"strings": "on"
+	},
+	// Incluye los lenguajes en los que escribes clases de Tailwind
+	"tailwindCSS.includeLanguages": {
+		"javascript": "javascript",
+		"typescript": "typescript",
+		"javascriptreact": "javascriptreact",
+		"typescriptreact": "typescriptreact",
+		"html": "html",
+		"css": "css"
+	}
+	// Si tienes problemas y estás usando una versión anterior de la extensión,
+	// podrías probar a deshabilitar esta opción, pero en general no es necesaria.
+	// "tailwindCSS.experimental.references": false
+}

@@ -1,0 +1,11 @@
+.container {
+	@apply flex w-full items-center justify-center;
+}
+
+.loader {
+	@apply flex flex-col items-center space-y-4;
+}
+
+.text {
+	@apply text-gray-500;
+}
