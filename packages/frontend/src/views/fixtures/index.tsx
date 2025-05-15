@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import { useFetchData } from '@/hooks'
 import TeamList from '../teams/list'
@@ -17,9 +17,11 @@ export default function Fixtures() {
 		'request/favorite',
 		data?.accessToken,
 	)
+	const router = useRouter()
 
 	if (status === 'unauthenticated') {
-		return redirect('/login')
+		router.push('/login')
+		return undefined
 	}
 
 	return (
@@ -36,7 +38,9 @@ export default function Fixtures() {
 						teams={favoriteTeams}
 						Action={({ team }) => (
 							<Button
-								onClick={() => redirect(`/fixtures/${team.id}`)}
+								onClick={() => {
+									router.push(`/fixtures/${team.id}`)
+								}}
 							>
 								Ver
 							</Button>

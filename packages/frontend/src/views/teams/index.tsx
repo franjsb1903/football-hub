@@ -1,7 +1,7 @@
 'use client'
 
 import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 import { FaRegStar as Star } from 'react-icons/fa6'
 import { FaStar as FilledStar } from 'react-icons/fa6'
 
@@ -23,8 +23,11 @@ export default function Teams() {
 		isFavorite,
 		toggleFavorite,
 	} = useFavoriteTeams(data?.accessToken)
+	const router = useRouter()
+
 	if (status === 'unauthenticated') {
-		return redirect('/login')
+		router.push('/login')
+		return undefined
 	}
 
 	return (

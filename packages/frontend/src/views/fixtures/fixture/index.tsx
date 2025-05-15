@@ -1,5 +1,5 @@
 import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import FixturesLayout from '@/layouts/fixtures-layout'
 import { useFetchData } from '@/hooks'
@@ -19,9 +19,11 @@ export default function FixtureView({ id }: FixtureProperties) {
 		`request/fixtures/${id}`,
 		data?.accessToken,
 	)
+	const router = useRouter()
 
 	if (status === 'unauthenticated') {
-		return redirect('/login')
+		router.push('/login')
+		return undefined
 	}
 
 	if (isLoading) {

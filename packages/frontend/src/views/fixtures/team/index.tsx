@@ -1,6 +1,6 @@
 /* eslint-disable import/order */
 import { useSession } from 'next-auth/react'
-import { redirect } from 'next/navigation'
+import { useRouter } from 'next/navigation'
 
 import FixturesLayout from '@/layouts/fixtures-layout'
 
@@ -24,14 +24,15 @@ interface ComingMatchesProperties {
 
 export default function ComingMatches({ team }: ComingMatchesProperties) {
 	const { data, status } = useSession()
-
+	const router = useRouter()
 	const { data: fixtures, isLoading } = useFetchData<Fixture[]>(
 		`request/fixtures/team/${team}`,
 		data?.accessToken,
 	)
 
 	if (status === 'unauthenticated') {
-		return redirect('/login')
+		router.push('/login')
+		return undefined
 	}
 
 	if (isLoading) {
@@ -47,7 +48,7 @@ export default function ComingMatches({ team }: ComingMatchesProperties) {
 						key={fixture.id}
 						className={styles.card}
 						onClick={() =>
-							redirect(`/fixtures/fixture/${fixture.id}`)
+							router.push(`/fixtures/fixture/${fixture.id}`)
 						}
 					>
 						<CardHeader className={styles.cardHeader}>
