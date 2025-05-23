@@ -1,4 +1,5 @@
 import {
+	BadRequestException,
 	Body,
 	Controller,
 	Delete,
@@ -25,10 +26,9 @@ export default class FavoriteTeamController {
 	favoriteTeamProvider: FavoriteTeamProvider
 
 	@Get()
-	async getAll(@Request() request): Promise<Team[] | undefined> {
+	async getAll(@Request() request) {
 		try {
-			const user = request.user
-			const userId = user.id
+			const { id: userId } = request.user
 
 			const teams = await this.favoriteTeamProvider.getAllByUser(userId)
 
@@ -40,15 +40,19 @@ export default class FavoriteTeamController {
 				name: team.name,
 			}))
 		} catch (error) {
-			this.logger.error('Error saving favorite team', error)
+			this.logger.error('Error getting favorite teams', error)
+			throw error
 		}
 	}
 
 	@Post()
 	async saveFavoriteTeam(@Body() team: Team, @Request() request) {
 		try {
-			const user = request.user
-			const userId = user.id
+			const { id: userId } = request.user
+
+			if (!team || !team.id) {
+				throw new BadRequestException('El equipo no es correcto')
+			}
 
 			const result = await this.favoriteTeamProvider.saveFavoriteTeam(
 				userId,
@@ -57,22 +61,28 @@ export default class FavoriteTeamController {
 			return result
 		} catch (error) {
 			this.logger.error('Error saving favorite team', error)
+			throw error
 		}
 	}
 
 	@Delete('/:id')
 	async deleteFavoriteTeam(@Param('id') teamId: string, @Request() request) {
 		try {
-			const user = request.user
-			const userId = user.id
+			const parsedTeamId = Number.parseInt(teamId)
+			if (Number.isNaN(parsedTeamId)) {
+				throw new BadRequestException('El id del equipo no es correcto')
+			}
+
+			const { id: userId } = request.user
 
 			const result = await this.favoriteTeamProvider.deleteFavoriteTeam(
 				userId,
-				Number.parseInt(teamId),
+				parsedTeamId,
 			)
 			return result
 		} catch (error) {
 			this.logger.error('Error deleting favorite team', error)
+			throw error
 		}
 	}
 }

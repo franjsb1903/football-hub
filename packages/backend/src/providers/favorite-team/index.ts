@@ -1,4 +1,4 @@
-import { BadRequestException, Inject, Injectable } from '@nestjs/common'
+import { BadRequestException, Inject, Injectable, Logger } from '@nestjs/common'
 import FavoriteTeamRepository from 'src/repositories/team'
 import { Team } from 'src/types'
 
@@ -6,14 +6,32 @@ import { Team } from 'src/types'
 export default class FavoriteTeamsProvider {
 	@Inject()
 	favoriteTeamRepository: FavoriteTeamRepository
+	@Inject()
+	logger: Logger
 
 	async getAllByUser(userId: string) {
-		return this.favoriteTeamRepository.getAllByUser(userId)
+		try {
+			return this.favoriteTeamRepository.getAllByUser(userId)
+		} catch (error) {
+			this.logger.error('Error al obtener los equipos favoritos', error)
+			throw new BadRequestException(
+				'Error al obtener los equipos favoritos',
+			)
+		}
 	}
 
 	async saveFavoriteTeam(userId: string, team: Team) {
-		const numberOfTeams =
-			await this.favoriteTeamRepository.getNumberOfTeamsByUser(userId)
+		const numberOfTeams = await this.favoriteTeamRepository
+			.getNumberOfTeamsByUser(userId)
+			.catch((error) => {
+				this.logger.error(
+					'Error al obtener el número de equipos favoritos',
+					error,
+				)
+				throw new BadRequestException(
+					'Error al obtener el número de equipos favoritos',
+				)
+			})
 
 		if (numberOfTeams >= 5) {
 			throw new BadRequestException(
@@ -25,7 +43,12 @@ export default class FavoriteTeamsProvider {
 			throw new BadRequestException('El equipo no es correcto')
 		}
 
-		return this.favoriteTeamRepository.saveFavoriteTeam(userId, team)
+		try {
+			return this.favoriteTeamRepository.saveFavoriteTeam(userId, team)
+		} catch (error) {
+			this.logger.error('Error al guardar el equipo favorito', error)
+			throw new BadRequestException('Error al guardar el equipo favorito')
+		}
 	}
 
 	async deleteFavoriteTeam(userId: string, teamId: number) {
@@ -33,6 +56,16 @@ export default class FavoriteTeamsProvider {
 			throw new BadRequestException('El equipo no es correcto')
 		}
 
-		return this.favoriteTeamRepository.deleteFavoriteTeam(userId, teamId)
+		try {
+			return this.favoriteTeamRepository.deleteFavoriteTeam(
+				userId,
+				teamId,
+			)
+		} catch (error) {
+			this.logger.error('Error al eliminar el equipo favorito', error)
+			throw new BadRequestException(
+				'Error al eliminar el equipo favorito',
+			)
+		}
 	}
 }
