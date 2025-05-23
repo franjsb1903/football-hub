@@ -9,26 +9,29 @@ import * as bcrypt from 'bcrypt'
 import type { LoginUser, RegisterUser } from 'src/types'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
-
-import PrismaProvider from '../prisma'
+import UserRepository from 'src/repositories/user'
 
 @Injectable()
 export default class AuthProvider {
 	@Inject()
-	private prisma: PrismaProvider
+	private userRepository: UserRepository
 	@Inject()
 	private jwt: JwtService
 
 	async register(user: RegisterUser) {
+		const existingUser = await this.userRepository.findByEmail(user.email)
+
+		if (existingUser) {
+			throw new ConflictException('Ya existe un usuario con ese email')
+		}
+
 		await this.validateUserRegistration(user)
 
 		const hashedPassword = await this.hashPassword(user.password)
-		const newUser = await this.prisma.user.create({
-			data: {
-				email: user.email,
-				name: user.name,
-				password: hashedPassword,
-			},
+		const newUser = await this.userRepository.create({
+			email: user.email,
+			name: user.name,
+			password: hashedPassword,
 		})
 
 		return newUser
@@ -39,9 +42,7 @@ export default class AuthProvider {
 			throw new BadRequestException('Faltan campos requeridos')
 		}
 
-		const savedUser = await this.prisma.user.findUnique({
-			where: { email: user.email },
-		})
+		const savedUser = await this.userRepository.findByEmail(user.email)
 
 		if (!savedUser) {
 			throw new UnauthorizedException('Usuario no encontrado')
@@ -77,14 +78,6 @@ export default class AuthProvider {
 			).test(user.email)
 		) {
 			throw new BadRequestException('Email no válido')
-		}
-
-		const existingUser = await this.prisma.user.findUnique({
-			where: { email: user.email },
-		})
-
-		if (existingUser) {
-			throw new ConflictException('Ya existe un usuario con ese email')
 		}
 	}
 

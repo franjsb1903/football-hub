@@ -20,6 +20,7 @@ import {
 } from './controllers'
 import FixturesController from './controllers/fixtures'
 import { LoggerMiddleware } from './logger'
+import UserRepository from './repositories/user'
 
 @Module({
 	imports: [
@@ -47,6 +48,7 @@ import { LoggerMiddleware } from './logger'
 		AuthProvider,
 		FootballFetcherProvider,
 		FavoriteTeamRepository,
+		UserRepository,
 		FavoriteTeamProvider,
 		Logger,
 	],

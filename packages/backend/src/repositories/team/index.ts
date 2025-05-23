@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common'
-import { PrismaProvider } from 'src/providers'
 import { Team } from 'src/types'
+import { PrismaProvider } from 'src/providers'
 
 @Injectable()
 export default class FavoriteTeamRepository {
