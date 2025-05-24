@@ -14,6 +14,11 @@ import {
 import { AuthGuard } from 'src/guards'
 import { FootballFetcherProvider, FavoriteTeamProvider } from 'src/providers'
 import { Team } from 'src/types'
+import {
+	FavoriteTeamException,
+	MaxFavoriteTeamsReachedException,
+	InvalidTeamException,
+} from 'src/exceptions/domain/favorite-team'
 
 @Controller('favorite')
 @UseGuards(AuthGuard)
@@ -27,47 +32,76 @@ export default class FavoriteTeamController {
 
 	@Get()
 	async getAll(@Request() request) {
-		const { id: userId } = request.user
+		try {
+			const { id: userId } = request.user
+			const teams = await this.favoriteTeamProvider.getAllByUser(userId)
 
-		const teams = await this.favoriteTeamProvider.getAllByUser(userId)
-
-		return teams.map((team) => ({
-			id: team.teamId,
-			code: team.code,
-			country: team.country,
-			logo: team.teamLogo,
-			name: team.name,
-		}))
+			return teams.map((team) => ({
+				id: team.teamId,
+				code: team.code,
+				country: team.country,
+				logo: team.teamLogo,
+				name: team.name,
+			}))
+		} catch (error) {
+			if (error instanceof FavoriteTeamException) {
+				throw new BadRequestException(error.message)
+			}
+			throw error
+		}
 	}
 
 	@Post()
 	async saveFavoriteTeam(@Body() team: Team, @Request() request) {
-		const { id: userId } = request.user
+		try {
+			const { id: userId } = request.user
 
-		if (!team || !team.id) {
-			throw new BadRequestException('El equipo no es correcto')
+			if (!team || !team.id) {
+				throw new InvalidTeamException()
+			}
+
+			const result = await this.favoriteTeamProvider.saveFavoriteTeam(
+				userId,
+				team,
+			)
+			return result
+		} catch (error) {
+			if (error instanceof MaxFavoriteTeamsReachedException) {
+				throw new BadRequestException(error.message)
+			}
+			if (error instanceof InvalidTeamException) {
+				throw new BadRequestException(error.message)
+			}
+			if (error instanceof FavoriteTeamException) {
+				throw new BadRequestException(error.message)
+			}
+			throw error
 		}
-
-		const result = await this.favoriteTeamProvider.saveFavoriteTeam(
-			userId,
-			team,
-		)
-		return result
 	}
 
 	@Delete('/:id')
 	async deleteFavoriteTeam(@Param('id') teamId: string, @Request() request) {
-		const parsedTeamId = Number.parseInt(teamId)
-		if (Number.isNaN(parsedTeamId)) {
-			throw new BadRequestException('El id del equipo no es correcto')
+		try {
+			const parsedTeamId = Number.parseInt(teamId)
+			if (Number.isNaN(parsedTeamId)) {
+				throw new InvalidTeamException()
+			}
+
+			const { id: userId } = request.user
+
+			const result = await this.favoriteTeamProvider.deleteFavoriteTeam(
+				userId,
+				parsedTeamId,
+			)
+			return result
+		} catch (error) {
+			if (error instanceof InvalidTeamException) {
+				throw new BadRequestException(error.message)
+			}
+			if (error instanceof FavoriteTeamException) {
+				throw new BadRequestException(error.message)
+			}
+			throw error
 		}
-
-		const { id: userId } = request.user
-
-		const result = await this.favoriteTeamProvider.deleteFavoriteTeam(
-			userId,
-			parsedTeamId,
-		)
-		return result
 	}
 }
