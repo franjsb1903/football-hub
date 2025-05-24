@@ -1,10 +1,15 @@
 import { Test, TestingModule } from '@nestjs/testing'
-import { Logger } from '@nestjs/common'
+import { Logger, BadRequestException } from '@nestjs/common'
 
 import FavoriteTeamController from './index'
 import { FavoriteTeamProvider, FootballFetcherProvider } from '../../providers'
 import { Team } from '../../types'
 import { AuthGuard } from '../../guards'
+import {
+	FavoriteTeamException,
+	MaxFavoriteTeamsReachedException,
+	InvalidTeamException,
+} from '../../exceptions/domain/favorite-team'
 
 describe('FavoriteTeamController', () => {
 	let favoriteTeamController: FavoriteTeamController
@@ -101,21 +106,20 @@ describe('FavoriteTeamController', () => {
 			expect(result).toEqual(expectedTeams)
 		})
 
-		it('should log an error if an exception occurs', async () => {
-			const error = new Error('Something went wrong')
-			try {
-				const userId = 1
-				const mockRequest = { user: { id: userId } }
-				;(
-					favoriteTeamProvider.getAllByUser as jest.Mock
-				).mockRejectedValue(error)
+		it('should transform FavoriteTeamException to BadRequestException', async () => {
+			const userId = 1
+			const mockRequest = { user: { id: userId } }
+			const error = new FavoriteTeamException(
+				'Error al obtener los equipos favoritos',
+			)
+			;(favoriteTeamProvider.getAllByUser as jest.Mock).mockRejectedValue(
+				error,
+			)
 
-				await favoriteTeamController.getAll(mockRequest)
-
-				expect(1).toBe(0)
-			} catch {
-				expect(logger.error).toHaveBeenCalled()
-			}
+			await expect(
+				favoriteTeamController.getAll(mockRequest),
+			).rejects.toThrow(BadRequestException)
+			expect(logger.error).toHaveBeenCalled()
 		})
 	})
 
@@ -147,32 +151,69 @@ describe('FavoriteTeamController', () => {
 			expect(result).toBe(expectedResult)
 		})
 
-		it('should log an error if an exception occurs', async () => {
-			const error = new Error('Something went wrong')
-			try {
-				const userId = 1
-				const mockRequest = { user: { id: userId } }
-				const teamData: Team = {
-					id: 3,
-					code: 'CHE',
-					country: 'England',
-					logo: 'logo3.png',
-					name: 'Chelsea',
-				}
-
-				;(
-					favoriteTeamProvider.saveFavoriteTeam as jest.Mock
-				).mockRejectedValueOnce(error)
-
-				await favoriteTeamController.saveFavoriteTeam(
-					teamData,
-					mockRequest,
-				)
-
-				expect(1).toBe(0)
-			} catch {
-				expect(logger.error).toHaveBeenCalled()
+		it('should transform MaxFavoriteTeamsReachedException to BadRequestException', async () => {
+			const userId = 1
+			const mockRequest = { user: { id: userId } }
+			const teamData: Team = {
+				id: 3,
+				code: 'CHE',
+				country: 'England',
+				logo: 'logo3.png',
+				name: 'Chelsea',
 			}
+			const error = new MaxFavoriteTeamsReachedException()
+			;(
+				favoriteTeamProvider.saveFavoriteTeam as jest.Mock
+			).mockRejectedValue(error)
+
+			await expect(
+				favoriteTeamController.saveFavoriteTeam(teamData, mockRequest),
+			).rejects.toThrow(BadRequestException)
+			expect(logger.error).toHaveBeenCalled()
+		})
+
+		it('should transform InvalidTeamException to BadRequestException', async () => {
+			const userId = 1
+			const mockRequest = { user: { id: userId } }
+			const teamData: Team = {
+				id: 3,
+				code: 'CHE',
+				country: 'England',
+				logo: 'logo3.png',
+				name: 'Chelsea',
+			}
+			const error = new InvalidTeamException()
+			;(
+				favoriteTeamProvider.saveFavoriteTeam as jest.Mock
+			).mockRejectedValue(error)
+
+			await expect(
+				favoriteTeamController.saveFavoriteTeam(teamData, mockRequest),
+			).rejects.toThrow(BadRequestException)
+			expect(logger.error).toHaveBeenCalled()
+		})
+
+		it('should transform FavoriteTeamException to BadRequestException', async () => {
+			const userId = 1
+			const mockRequest = { user: { id: userId } }
+			const teamData: Team = {
+				id: 3,
+				code: 'CHE',
+				country: 'England',
+				logo: 'logo3.png',
+				name: 'Chelsea',
+			}
+			const error = new FavoriteTeamException(
+				'Error al guardar el equipo favorito',
+			)
+			;(
+				favoriteTeamProvider.saveFavoriteTeam as jest.Mock
+			).mockRejectedValue(error)
+
+			await expect(
+				favoriteTeamController.saveFavoriteTeam(teamData, mockRequest),
+			).rejects.toThrow(BadRequestException)
+			expect(logger.error).toHaveBeenCalled()
 		})
 	})
 
@@ -197,26 +238,36 @@ describe('FavoriteTeamController', () => {
 			expect(result).toBe(expectedResult)
 		})
 
-		it('should log an error if an exception occurs', async () => {
-			const error = new Error('Something went wrong')
+		it('should transform InvalidTeamException to BadRequestException', async () => {
+			const userId = 1
+			const teamId = '4'
+			const mockRequest = { user: { id: userId } }
+			const error = new InvalidTeamException()
+			;(
+				favoriteTeamProvider.deleteFavoriteTeam as jest.Mock
+			).mockRejectedValue(error)
 
-			try {
-				const userId = 1
-				const teamId = '4'
-				const mockRequest = { user: { id: userId } }
-				;(
-					favoriteTeamProvider.deleteFavoriteTeam as jest.Mock
-				).mockRejectedValue(error)
+			await expect(
+				favoriteTeamController.deleteFavoriteTeam(teamId, mockRequest),
+			).rejects.toThrow(BadRequestException)
+			expect(logger.error).toHaveBeenCalled()
+		})
 
-				await favoriteTeamController.deleteFavoriteTeam(
-					teamId,
-					mockRequest,
-				)
+		it('should transform FavoriteTeamException to BadRequestException', async () => {
+			const userId = 1
+			const teamId = '4'
+			const mockRequest = { user: { id: userId } }
+			const error = new FavoriteTeamException(
+				'Error al eliminar el equipo favorito',
+			)
+			;(
+				favoriteTeamProvider.deleteFavoriteTeam as jest.Mock
+			).mockRejectedValue(error)
 
-				expect(1).toBe(0)
-			} catch {
-				expect(logger.error).toHaveBeenCalled()
-			}
+			await expect(
+				favoriteTeamController.deleteFavoriteTeam(teamId, mockRequest),
+			).rejects.toThrow(BadRequestException)
+			expect(logger.error).toHaveBeenCalled()
 		})
 	})
 })

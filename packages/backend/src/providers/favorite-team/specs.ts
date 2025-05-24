@@ -1,4 +1,8 @@
-import { BadRequestException } from '@nestjs/common'
+import {
+	FavoriteTeamException,
+	MaxFavoriteTeamsReachedException,
+	InvalidTeamException,
+} from 'src/exceptions/domain/favorite-team'
 
 import FavoriteTeamsProvider from './index'
 
@@ -13,6 +17,8 @@ function createProvider() {
 	const provider = new FavoriteTeamsProvider()
 	// @ts-ignore
 	provider.favoriteTeamRepository = mockFavoriteTeamRepository
+	// @ts-ignore
+	provider.logger = { error: jest.fn() }
 	return provider
 }
 
@@ -34,6 +40,22 @@ describe('FavoriteTeamsProvider', () => {
 			).toHaveBeenCalledWith(userId)
 			expect(result).toEqual(['team1'])
 		})
+
+		it('should transform repository error to FavoriteTeamException', async () => {
+			const databaseError = new Error('DB Error')
+			mockFavoriteTeamRepository.getAllByUser.mockRejectedValue(
+				databaseError,
+			)
+			const provider = createProvider()
+
+			await expect(provider.getAllByUser(userId)).rejects.toThrow(
+				FavoriteTeamException,
+			)
+			expect(provider.logger.error).toHaveBeenCalledWith(
+				'Error al obtener los equipos favoritos',
+				databaseError,
+			)
+		})
 	})
 
 	describe('saveFavoriteTeam', () => {
@@ -52,24 +74,43 @@ describe('FavoriteTeamsProvider', () => {
 			expect(result).toBe('saved')
 		})
 
-		it('should throw if user already has 5 teams', async () => {
+		it('should throw MaxFavoriteTeamsReachedException if user already has 5 teams', async () => {
 			mockFavoriteTeamRepository.getNumberOfTeamsByUser.mockResolvedValue(
 				5,
 			)
 			const provider = createProvider()
 			await expect(
 				provider.saveFavoriteTeam(userId, team as any),
-			).rejects.toThrow(BadRequestException)
+			).rejects.toThrow(MaxFavoriteTeamsReachedException)
 		})
 
-		it('should throw if team id is not a number', async () => {
+		it('should throw InvalidTeamException if team id is not a number', async () => {
 			mockFavoriteTeamRepository.getNumberOfTeamsByUser.mockResolvedValue(
 				2,
 			)
 			const provider = createProvider()
 			await expect(
 				provider.saveFavoriteTeam(userId, { id: 'abc' } as any),
-			).rejects.toThrow(BadRequestException)
+			).rejects.toThrow(InvalidTeamException)
+		})
+
+		it('should transform repository error to FavoriteTeamException', async () => {
+			const databaseError = new Error('DB Error')
+			mockFavoriteTeamRepository.getNumberOfTeamsByUser.mockResolvedValue(
+				2,
+			)
+			mockFavoriteTeamRepository.saveFavoriteTeam.mockRejectedValue(
+				databaseError,
+			)
+			const provider = createProvider()
+
+			await expect(
+				provider.saveFavoriteTeam(userId, team as any),
+			).rejects.toThrow(FavoriteTeamException)
+			expect(provider.logger.error).toHaveBeenCalledWith(
+				'Error al guardar el equipo favorito',
+				databaseError,
+			)
 		})
 	})
 
@@ -86,11 +127,27 @@ describe('FavoriteTeamsProvider', () => {
 			expect(result).toBe('deleted')
 		})
 
-		it('should throw if team id is not a number', async () => {
+		it('should throw InvalidTeamException if team id is not a number', async () => {
 			const provider = createProvider()
 			await expect(
 				provider.deleteFavoriteTeam(userId, 'abc' as any),
-			).rejects.toThrow(BadRequestException)
+			).rejects.toThrow(InvalidTeamException)
+		})
+
+		it('should transform repository error to FavoriteTeamException', async () => {
+			const databaseError = new Error('DB Error')
+			mockFavoriteTeamRepository.deleteFavoriteTeam.mockRejectedValue(
+				databaseError,
+			)
+			const provider = createProvider()
+
+			await expect(
+				provider.deleteFavoriteTeam(userId, 1),
+			).rejects.toThrow(FavoriteTeamException)
+			expect(provider.logger.error).toHaveBeenCalledWith(
+				'Error al eliminar el equipo favorito',
+				databaseError,
+			)
 		})
 	})
 })
