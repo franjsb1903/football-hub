@@ -9,7 +9,7 @@ import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
 
 import AuthProvider from './index'
-import PrismaProvider from '../prisma'
+import PrismaProvider from '../../database/service'
 
 jest.mock('bcrypt', () => ({
 	hash: jest.fn(),

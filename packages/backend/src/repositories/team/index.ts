@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { Team } from 'src/types'
-import { PrismaProvider } from 'src/providers'
+import { DatabaseService } from 'src/database'
 
 @Injectable()
 export default class FavoriteTeamRepository {
 	@Inject()
-	prisma: PrismaProvider
+	db: DatabaseService
 
 	async getNumberOfTeamsByUser(userId: string) {
-		return this.prisma.favoriteTeam.count({
+		return this.db.favoriteTeam.count({
 			where: {
 				userId,
 			},
@@ -16,7 +16,7 @@ export default class FavoriteTeamRepository {
 	}
 
 	async getAllByUser(userId: string) {
-		return this.prisma.favoriteTeam.findMany({
+		return this.db.favoriteTeam.findMany({
 			where: {
 				userId,
 			},
@@ -24,7 +24,7 @@ export default class FavoriteTeamRepository {
 	}
 
 	async saveFavoriteTeam(userId: string, team: Team) {
-		return this.prisma.favoriteTeam.create({
+		return this.db.favoriteTeam.create({
 			data: {
 				userId,
 				code: team.code || '',
@@ -37,7 +37,7 @@ export default class FavoriteTeamRepository {
 	}
 
 	async deleteFavoriteTeam(userId: string, teamId: number) {
-		return this.prisma.favoriteTeam.delete({
+		return this.db.favoriteTeam.delete({
 			where: {
 				userId_teamId: {
 					userId,

@@ -1,14 +1,14 @@
 import { Inject, Injectable } from '@nestjs/common'
 import { RegisterUser } from 'src/types'
-import { PrismaProvider } from 'src/providers'
+import { DatabaseService } from 'src/database'
 
 @Injectable()
 export default class UserRepository {
 	@Inject()
-	prisma: PrismaProvider
+	db: DatabaseService
 
 	async create(user: RegisterUser) {
-		return this.prisma.user.create({
+		return this.db.user.create({
 			data: {
 				email: user.email,
 				name: user.name,
@@ -18,7 +18,7 @@ export default class UserRepository {
 	}
 
 	async findByEmail(email: string) {
-		return this.prisma.user.findUnique({
+		return this.db.user.findUnique({
 			where: { email },
 		})
 	}

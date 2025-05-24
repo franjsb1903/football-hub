@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common'
 import { PrismaClient } from '@prisma/client'
 
 @Injectable()
-export default class PrismaProvider
+export default class DatabaseService
 	extends PrismaClient
 	implements OnModuleInit
 {
