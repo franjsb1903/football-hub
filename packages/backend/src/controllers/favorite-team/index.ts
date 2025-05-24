@@ -45,6 +45,10 @@ export default class FavoriteTeamController {
 			}))
 		} catch (error) {
 			if (error instanceof FavoriteTeamException) {
+				this.logger.error(
+					'Error al obtener los equipos favoritos',
+					error,
+				)
 				throw new BadRequestException(error.message)
 			}
 			throw error
@@ -67,12 +71,15 @@ export default class FavoriteTeamController {
 			return result
 		} catch (error) {
 			if (error instanceof MaxFavoriteTeamsReachedException) {
+				this.logger.error('Error al guardar el equipo favorito', error)
 				throw new BadRequestException(error.message)
 			}
 			if (error instanceof InvalidTeamException) {
+				this.logger.error('Error al guardar el equipo favorito', error)
 				throw new BadRequestException(error.message)
 			}
 			if (error instanceof FavoriteTeamException) {
+				this.logger.error('Error al guardar el equipo favorito', error)
 				throw new BadRequestException(error.message)
 			}
 			throw error
@@ -96,9 +103,11 @@ export default class FavoriteTeamController {
 			return result
 		} catch (error) {
 			if (error instanceof InvalidTeamException) {
+				this.logger.error('Error al eliminar el equipo favorito', error)
 				throw new BadRequestException(error.message)
 			}
 			if (error instanceof FavoriteTeamException) {
+				this.logger.error('Error al eliminar el equipo favorito', error)
 				throw new BadRequestException(error.message)
 			}
 			throw error
