@@ -1,15 +1,16 @@
-import {
-	BadRequestException,
-	ConflictException,
-	Inject,
-	Injectable,
-	UnauthorizedException,
-} from '@nestjs/common'
+import { Inject, Injectable } from '@nestjs/common'
 import * as bcrypt from 'bcrypt'
 import type { LoginUser, RegisterUser } from 'src/types'
 import { JwtService } from '@nestjs/jwt'
 import { User } from '@prisma/client'
 import UserRepository from 'src/repositories/user'
+import {
+	InvalidEmailFormatException,
+	InvalidPasswordException,
+	MissingRequiredFieldsException,
+	UserAlreadyExistsException,
+	UserNotFoundException,
+} from 'src/exceptions/domain'
 
 @Injectable()
 export default class AuthProvider {
@@ -22,7 +23,7 @@ export default class AuthProvider {
 		const existingUser = await this.userRepository.findByEmail(user.email)
 
 		if (existingUser) {
-			throw new ConflictException('Ya existe un usuario con ese email')
+			throw new UserAlreadyExistsException()
 		}
 
 		await this.validateUserRegistration(user)
@@ -39,13 +40,13 @@ export default class AuthProvider {
 
 	async login(user: LoginUser) {
 		if (!user || !user.email || !user.password) {
-			throw new BadRequestException('Faltan campos requeridos')
+			throw new MissingRequiredFieldsException()
 		}
 
 		const savedUser = await this.userRepository.findByEmail(user.email)
 
 		if (!savedUser) {
-			throw new UnauthorizedException('Usuario no encontrado')
+			throw new UserNotFoundException()
 		}
 
 		const isPasswordValid = await bcrypt.compare(
@@ -54,7 +55,7 @@ export default class AuthProvider {
 		)
 
 		if (!isPasswordValid) {
-			throw new UnauthorizedException('Contraseña incorrecta')
+			throw new InvalidPasswordException()
 		}
 
 		const authUser = this.getUserPayloadAndToken(savedUser)
@@ -69,7 +70,7 @@ export default class AuthProvider {
 
 	private async validateUserRegistration(user: RegisterUser) {
 		if (!user || !user.email || !user.name || !user.password) {
-			throw new BadRequestException('Faltan campos requeridos')
+			throw new MissingRequiredFieldsException()
 		}
 
 		if (
@@ -77,7 +78,7 @@ export default class AuthProvider {
 				/^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
 			).test(user.email)
 		) {
-			throw new BadRequestException('Email no válido')
+			throw new InvalidEmailFormatException()
 		}
 	}
 

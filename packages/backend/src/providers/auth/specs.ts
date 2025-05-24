@@ -1,15 +1,18 @@
 /* eslint-disable unicorn/no-null */
 import { Test, TestingModule } from '@nestjs/testing'
-import {
-	BadRequestException,
-	ConflictException,
-	UnauthorizedException,
-} from '@nestjs/common'
 import { JwtService } from '@nestjs/jwt'
 import * as bcrypt from 'bcrypt'
+import PrismaProvider from 'src/database/service'
+import UserRepository from 'src/repositories/user'
+import {
+	InvalidEmailFormatException,
+	InvalidPasswordException,
+	MissingRequiredFieldsException,
+	UserAlreadyExistsException,
+	UserNotFoundException,
+} from 'src/exceptions/domain'
 
 import AuthProvider from './index'
-import PrismaProvider from '../../database/service'
 
 jest.mock('bcrypt', () => ({
 	hash: jest.fn(),
@@ -18,8 +21,8 @@ jest.mock('bcrypt', () => ({
 
 describe('AuthProvider', () => {
 	let authProvider: AuthProvider
-	let prismaProvider: PrismaProvider
 	let jwtService: JwtService
+	let userRepository: UserRepository
 
 	beforeEach(async () => {
 		const module: TestingModule = await Test.createTestingModule({
@@ -41,12 +44,19 @@ describe('AuthProvider', () => {
 						verifyAsync: jest.fn(),
 					},
 				},
+				{
+					provide: UserRepository,
+					useValue: {
+						findByEmail: jest.fn(),
+						create: jest.fn(),
+					},
+				},
 			],
 		}).compile()
 
 		authProvider = module.get<AuthProvider>(AuthProvider)
-		prismaProvider = module.get<PrismaProvider>(PrismaProvider)
 		jwtService = module.get<JwtService>(JwtService)
+		userRepository = module.get<UserRepository>(UserRepository)
 
 		jest.spyOn(authProvider as any, 'hashPassword')
 		jest.spyOn(authProvider as any, 'getUserPayloadAndToken')
@@ -57,7 +67,7 @@ describe('AuthProvider', () => {
 	})
 
 	describe('register', () => {
-		const registerUserDto = {
+		const registerUser = {
 			email: 'test@example.com',
 			name: 'Test User',
 			password: 'password123',
@@ -67,7 +77,7 @@ describe('AuthProvider', () => {
 			const hashedPassword = 'hashedpassword'
 			const createdUser = {
 				id: 1,
-				...registerUserDto,
+				...registerUser,
 				password: hashedPassword,
 			}
 
@@ -78,46 +88,65 @@ describe('AuthProvider', () => {
 			jest.spyOn(authProvider as any, 'hashPassword').mockResolvedValue(
 				hashedPassword,
 			)
-			jest.spyOn(prismaProvider.user, 'create').mockResolvedValue(
+			jest.spyOn(userRepository, 'create').mockResolvedValue(
 				createdUser as any,
 			)
+			jest.spyOn(userRepository, 'findByEmail').mockResolvedValue(null)
 
-			const result = await authProvider.register(registerUserDto)
+			const result = await authProvider.register(registerUser)
 
 			expect(
 				authProvider['validateUserRegistration'],
-			).toHaveBeenCalledWith(registerUserDto)
+			).toHaveBeenCalledWith(registerUser)
 			expect(authProvider['hashPassword']).toHaveBeenCalledWith(
-				registerUserDto.password,
+				registerUser.password,
 			)
-			expect(prismaProvider.user.create).toHaveBeenCalledWith({
-				data: {
-					email: registerUserDto.email,
-					name: registerUserDto.name,
-					password: hashedPassword,
-				},
+			expect(userRepository.create).toHaveBeenCalledWith({
+				email: registerUser.email,
+				name: registerUser.name,
+				password: hashedPassword,
 			})
 			expect(result).toBe(createdUser)
 		})
 
-		it('should throw BadRequestException if validation fails', async () => {
-			const validationError = new BadRequestException('Validation failed')
+		it('should throw UserAlreadyExistsException if user with email already exists', async () => {
+			const existingUser = {
+				email: 'existing@example.com',
+				name: 'Existing User',
+				password: 'password123',
+			}
+			jest.spyOn(userRepository, 'findByEmail').mockResolvedValue({
+				id: '1',
+				...existingUser,
+				createdAt: new Date(),
+			})
+
+			await expect(authProvider.register(existingUser)).rejects.toThrow(
+				UserAlreadyExistsException,
+			)
+			expect(userRepository.findByEmail).toHaveBeenCalledWith(
+				existingUser.email,
+			)
+		})
+
+		it('should throw MissingRequiredFieldsException if validation fails', async () => {
+			const validationError = new MissingRequiredFieldsException()
 			jest.spyOn(
 				authProvider as any,
 				'validateUserRegistration',
 			).mockRejectedValue(validationError)
 
-			await expect(
-				authProvider.register(registerUserDto),
-			).rejects.toThrow(BadRequestException)
+			await expect(authProvider.register(registerUser)).rejects.toThrow(
+				MissingRequiredFieldsException,
+			)
 			expect(
 				authProvider['validateUserRegistration'],
-			).toHaveBeenCalledWith(registerUserDto)
+			).toHaveBeenCalledWith(registerUser)
 		})
 	})
 
 	describe('login', () => {
-		const loginUserDto = {
+		const loginUser = {
 			email: 'test@example.com',
 			password: 'password123',
 		}
@@ -135,7 +164,7 @@ describe('AuthProvider', () => {
 		const accessToken = 'mockAccessToken'
 
 		it('should successfully log in a user', async () => {
-			jest.spyOn(prismaProvider.user, 'findUnique').mockResolvedValue(
+			jest.spyOn(userRepository, 'findByEmail').mockResolvedValue(
 				savedUser as any,
 			)
 			jest.spyOn(bcrypt, 'compare').mockResolvedValue(true as never)
@@ -144,13 +173,13 @@ describe('AuthProvider', () => {
 				'getUserPayloadAndToken',
 			).mockReturnValue({ user: userPayload, accessToken })
 
-			const result = await authProvider.login(loginUserDto)
+			const result = await authProvider.login(loginUser)
 
-			expect(prismaProvider.user.findUnique).toHaveBeenCalledWith({
-				where: { email: loginUserDto.email },
-			})
+			expect(userRepository.findByEmail).toHaveBeenCalledWith(
+				loginUser.email,
+			)
 			expect(bcrypt.compare).toHaveBeenCalledWith(
-				loginUserDto.password,
+				loginUser.password,
 				savedUser.password,
 			)
 			expect(authProvider['getUserPayloadAndToken']).toHaveBeenCalledWith(
@@ -159,47 +188,45 @@ describe('AuthProvider', () => {
 			expect(result).toEqual({ user: userPayload, accessToken })
 		})
 
-		it('should throw BadRequestException if email is missing', async () => {
+		it('should throw MissingRequiredFieldsException if email is missing', async () => {
 			await expect(
 				authProvider.login({ password: 'password123' } as any),
-			).rejects.toThrow(BadRequestException)
-			expect(prismaProvider.user.findUnique).not.toHaveBeenCalled()
+			).rejects.toThrow(MissingRequiredFieldsException)
+			expect(userRepository.findByEmail).not.toHaveBeenCalled()
 		})
 
-		it('should throw BadRequestException if password is missing', async () => {
+		it('should throw MissingRequiredFieldsException if password is missing', async () => {
 			await expect(
 				authProvider.login({ email: 'test@example.com' } as any),
-			).rejects.toThrow(BadRequestException)
-			expect(prismaProvider.user.findUnique).not.toHaveBeenCalled()
+			).rejects.toThrow(MissingRequiredFieldsException)
+			expect(userRepository.findByEmail).not.toHaveBeenCalled()
 		})
 
-		it('should throw UnauthorizedException if user is not found', async () => {
-			jest.spyOn(prismaProvider.user, 'findUnique').mockResolvedValue(
-				null,
-			)
+		it('should throw UserNotFoundException if user is not found', async () => {
+			jest.spyOn(userRepository, 'findByEmail').mockResolvedValue(null)
 
-			await expect(authProvider.login(loginUserDto)).rejects.toThrow(
-				UnauthorizedException,
+			await expect(authProvider.login(loginUser)).rejects.toThrow(
+				UserNotFoundException,
 			)
-			expect(prismaProvider.user.findUnique).toHaveBeenCalledWith({
-				where: { email: loginUserDto.email },
-			})
+			expect(userRepository.findByEmail).toHaveBeenCalledWith(
+				loginUser.email,
+			)
 		})
 
-		it('should throw UnauthorizedException if password is incorrect', async () => {
-			jest.spyOn(prismaProvider.user, 'findUnique').mockResolvedValue(
+		it('should throw InvalidPasswordException if password is incorrect', async () => {
+			jest.spyOn(userRepository, 'findByEmail').mockResolvedValue(
 				savedUser as any,
 			)
 			jest.spyOn(bcrypt, 'compare').mockResolvedValue(false as never)
 
-			await expect(authProvider.login(loginUserDto)).rejects.toThrow(
-				UnauthorizedException,
+			await expect(authProvider.login(loginUser)).rejects.toThrow(
+				InvalidPasswordException,
 			)
-			expect(prismaProvider.user.findUnique).toHaveBeenCalledWith({
-				where: { email: loginUserDto.email },
-			})
+			expect(userRepository.findByEmail).toHaveBeenCalledWith(
+				loginUser.email,
+			)
 			expect(bcrypt.compare).toHaveBeenCalledWith(
-				loginUserDto.password,
+				loginUser.password,
 				savedUser.password,
 			)
 		})
@@ -212,49 +239,40 @@ describe('AuthProvider', () => {
 				name: 'Valid User',
 				password: 'password123',
 			}
-			jest.spyOn(prismaProvider.user, 'findUnique').mockResolvedValue(
-				null,
-			)
 
 			await expect(
 				(authProvider as any).validateUserRegistration(validUser),
 			).resolves.toBeUndefined()
-			expect(prismaProvider.user.findUnique).toHaveBeenCalledWith({
-				where: { email: validUser.email },
-			})
 		})
 
-		it('should throw BadRequestException if email is missing', async () => {
+		it('should throw MissingRequiredFieldsException if email is missing', async () => {
 			const invalidUser = { name: 'Valid User', password: 'password123' }
 			await expect(
 				(authProvider as any).validateUserRegistration(invalidUser),
-			).rejects.toThrow(BadRequestException)
-			expect(prismaProvider.user.findUnique).not.toHaveBeenCalled()
+			).rejects.toThrow(MissingRequiredFieldsException)
 		})
 
-		it('should throw BadRequestException if name is missing', async () => {
+		it('should throw MissingRequiredFieldsException if name is missing', async () => {
 			const invalidUser = {
 				email: 'valid@example.com',
 				password: 'password123',
 			}
 			await expect(
 				(authProvider as any).validateUserRegistration(invalidUser),
-			).rejects.toThrow(BadRequestException)
-			expect(prismaProvider.user.findUnique).not.toHaveBeenCalled()
+			).rejects.toThrow(MissingRequiredFieldsException)
 		})
 
-		it('should throw BadRequestException if password is missing', async () => {
+		it('should throw MissingRequiredFieldsException if password is missing', async () => {
 			const invalidUser = {
 				email: 'valid@example.com',
 				name: 'Valid User',
 			}
 			await expect(
 				(authProvider as any).validateUserRegistration(invalidUser),
-			).rejects.toThrow(BadRequestException)
-			expect(prismaProvider.user.findUnique).not.toHaveBeenCalled()
+			).rejects.toThrow(MissingRequiredFieldsException)
 		})
 
-		it('should throw BadRequestException if email format is invalid', async () => {
+		it('should throw InvalidEmailFormatException if email format is invalid', async () => {
 			const invalidUser = {
 				email: 'invalid-email',
 				name: 'Valid User',
@@ -262,26 +280,7 @@ describe('AuthProvider', () => {
 			}
 			await expect(
 				(authProvider as any).validateUserRegistration(invalidUser),
-			).rejects.toThrow(BadRequestException)
-			expect(prismaProvider.user.findUnique).not.toHaveBeenCalled()
-		})
-
-		it('should throw ConflictException if user with email already exists', async () => {
-			const existingUser = {
-				email: 'existing@example.com',
-				name: 'Existing User',
-				password: 'password123',
-			}
-			jest.spyOn(prismaProvider.user, 'findUnique').mockResolvedValue(
-				existingUser as any,
-			)
-
-			await expect(
-				(authProvider as any).validateUserRegistration(existingUser),
-			).rejects.toThrow(ConflictException)
-			expect(prismaProvider.user.findUnique).toHaveBeenCalledWith({
-				where: { email: existingUser.email },
-			})
+			).rejects.toThrow(InvalidEmailFormatException)
 		})
 	})
 
