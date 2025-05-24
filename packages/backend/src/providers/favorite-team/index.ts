@@ -16,7 +16,7 @@ export default class FavoriteTeamsProvider {
 
 	async getAllByUser(userId: string) {
 		try {
-			return this.favoriteTeamRepository.getAllByUser(userId)
+			return await this.favoriteTeamRepository.getAllByUser(userId)
 		} catch (error) {
 			this.logger.error('Error al obtener los equipos favoritos', error)
 			throw new FavoriteTeamException(
@@ -26,36 +26,32 @@ export default class FavoriteTeamsProvider {
 	}
 
 	async saveFavoriteTeam(userId: string, team: Team) {
+		const numberOfTeams = await this.favoriteTeamRepository
+			.getNumberOfTeamsByUser(userId)
+			.catch((error) => {
+				this.logger.error(
+					'Error al obtener el número de equipos favoritos',
+					error,
+				)
+				throw new FavoriteTeamException(
+					'Error al obtener el número de equipos favoritos',
+				)
+			})
+
+		if (numberOfTeams >= 5) {
+			throw new MaxFavoriteTeamsReachedException()
+		}
+
+		if (typeof team.id !== 'number') {
+			throw new InvalidTeamException()
+		}
+
 		try {
-			const numberOfTeams = await this.favoriteTeamRepository
-				.getNumberOfTeamsByUser(userId)
-				.catch((error) => {
-					this.logger.error(
-						'Error al obtener el número de equipos favoritos',
-						error,
-					)
-					throw new FavoriteTeamException(
-						'Error al obtener el número de equipos favoritos',
-					)
-				})
-
-			if (numberOfTeams >= 5) {
-				throw new MaxFavoriteTeamsReachedException()
-			}
-
-			if (typeof team.id !== 'number') {
-				throw new InvalidTeamException()
-			}
-
-			return this.favoriteTeamRepository.saveFavoriteTeam(userId, team)
+			return await this.favoriteTeamRepository.saveFavoriteTeam(
+				userId,
+				team,
+			)
 		} catch (error) {
-			if (
-				error instanceof FavoriteTeamException ||
-				error instanceof MaxFavoriteTeamsReachedException ||
-				error instanceof InvalidTeamException
-			) {
-				throw error
-			}
 			this.logger.error('Error al guardar el equipo favorito', error)
 			throw new FavoriteTeamException(
 				'Error al guardar el equipo favorito',
@@ -64,19 +60,16 @@ export default class FavoriteTeamsProvider {
 	}
 
 	async deleteFavoriteTeam(userId: string, teamId: number) {
-		try {
-			if (typeof teamId !== 'number') {
-				throw new InvalidTeamException()
-			}
+		if (typeof teamId !== 'number') {
+			throw new InvalidTeamException()
+		}
 
-			return this.favoriteTeamRepository.deleteFavoriteTeam(
+		try {
+			return await this.favoriteTeamRepository.deleteFavoriteTeam(
 				userId,
 				teamId,
 			)
 		} catch (error) {
-			if (error instanceof InvalidTeamException) {
-				throw error
-			}
 			this.logger.error('Error al eliminar el equipo favorito', error)
 			throw new FavoriteTeamException(
 				'Error al eliminar el equipo favorito',
